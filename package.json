@@ -1,0 +1,43 @@
+{
+  "name": "wckj_search",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "core-js": "^2.6.5",
+    "element-ui": "^2.10.1",
+    "fastclick": "^1.0.6",
+    "file-saver": "^2.0.2",
+    "iview": "^3.4.2",
+    "lib-flexible": "^0.3.2",
+    "mta-h5-analysis": "^2.0.15",
+    "postcss-px2rem": "^0.3.0",
+    "qs": "^6.7.0",
+    "register-service-worker": "^1.6.2",
+    "vant": "^2.0.5",
+    "vue": "^2.6.10",
+    "vue-beauty": "^2.0.0-beta.19",
+    "vue-router": "^3.0.3",
+    "xlsx": "^0.15.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-plugin-eslint": "^3.8.0",
+    "@vue/cli-plugin-pwa": "^3.8.0",
+    "@vue/cli-service": "^3.8.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "jquery": "^3.4.1",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "postcss-px2rem-exclude": "^0.0.6",
+    "vue-infinite-scroll": "^2.0.2",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
