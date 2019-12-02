@@ -4,7 +4,7 @@
 	<div id="scheduling">
 		<div class="wc-page-top">
 			<div class="top-name">
-				<div class="top-close iconfont icon-Group-" @click="backLast"><span>返回</span></div>
+				<div class="top-close iconfont icon-zuojiantou" @click="backLast"><span>返回</span></div>
 				<div class="top-title">项目评分表</div>
 			</div>
 		</div>
@@ -14,121 +14,110 @@
 				<el-date-picker v-model="tableData.toTime" type="daterange" align="right" unlink-panels range-separator="至" format="yyyy-MM-dd"
 				 start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" id="time">
 				</el-date-picker>
-				<div class="drawTable" @click="createTable">生成表格</div>
+				<el-button class='btn_table' type='primary' @click="createTable" plain>生成表格</el-button>
+				<el-button class='btn_table' type='primary'  v-if="port" id="excell" @click="method5('dataTable')" plain>导出Excle表格</el-button>
+<!-- 				<div class="drawTable" @click="createTable">生成表格</div>
+				<div class='drawTable btn btn-outer' v-if="port" id="excell" @click="method5('dataTable')">导出Excle表格</div> -->
 			</div>
 			<table class="table2excel" id="dataTable">
 				<thead>
-					<tr>
-						<td style="text-align: center;">序号</td>
-						<td style="text-align: center;">项目名称</td>
-						<td style="text-align: center;">商务</td>
-						<td style="text-align: center;">前端开发</td>
-						<td style="text-align: center;">工作占比</td>
-						<td style="text-align: center;">备注</td>
-						<td style="text-align: center;">后端开发</td>
-						<td style="text-align: center;">工作占比</td>
-						<td style="text-align: center;">备注</td>
-						<td style="text-align: center;">设计开发</td>
-						<td style="text-align: center;">工作占比</td>
-						<td style="text-align: center;">备注</td>
+					<tr style="background:#ffff00">
+						<td style="min-width:300px; center;height:50px;line-height: 50px;">序号</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">项目名称</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">上线时间</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">项目评级</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">商务</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">产品</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">策划</td>			
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">前端开发</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">工作占比</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">客户满意度评价</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">后端开发</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">工作占比</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">客户满意度评价</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">设计开发</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">工作占比</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">客户满意度评价</td>
+						<td style="min-width:300px;text-align: center;height:50px;line-height: 50px;">商务总评</td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="(newItem,newIndex) in newList" :key="newIndex">
-
-						<td style="text-align: center;" v-html="newIndex"></td>
+						<td style="min-width:300px; text-align: center;" v-html="newIndex+1"></td>
 						<td style="text-align: center;" v-html="newItem.pro_name"></td>
+						<td style="text-align: center;" v-html="newItem.creat_time"></td>
+						<td :style="[{'text-align': 'center','color': '#fff','background':colorSelect(newItem.price)}]" v-html="nameSelect(newItem.price)"></td>
 						<td style="text-align: center;" v-html="newItem.sale_name"></td>
-
-
-
+						<td style="text-align: center;" v-html="newItem.zx_cp"></td>
+						<td style="text-align: center;" v-html="newItem.plan_name"></td>
+						
 						<td>
-							<div style="text-align: center;" v-for="qdItem,qdIndex in newItem.qdList" :key="qdIndex" v-html="qdItem.zx_name"></div>
-							<div style="color:#fff;text-align: center;" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.qdList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(qdItem,qdIndex) in newItem.qdList" :key="qdIndex"
+							 v-html="qdItem.zx_name"></div>
+							<div style="color:#fff;text-align: center;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.qdList.length)"
+							 :key="obj.id"></div>
 						</td>
-
-
-
 						<td>
-							<div style="text-align: center;" v-for="qdItem,qdIndex in newItem.qdList" :key="qdIndex" v-html="qdItem.score"></div>
-							<div style="color:#fff;text-align: center;" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.qdList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(qdItem,qdIndex) in newItem.qdList" :key="qdIndex"
+							 v-html="qdItem.Job_share"></div>
+							<div style="color:#fff;text-align: center;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.qdList.length)"
+							 :key="obj.id"></div>
 						</td>
-
-
 						<td>
-							<div style="text-align: center;" v-for="qdItem,qdIndex in newItem.qdList" :key="qdIndex" v-html="qdItem.m_center"></div>
-							<div style="text-align: center;color:#fff" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.qdList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(qdItem,qdIndex) in newItem.qdList" :key="qdIndex"
+							 v-html="qdItem.customer"></div>
+							<div style="color:#fff;text-align: center;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.qdList.length)"
+							 :key="obj.id"></div>
 						</td>
-
-
 						<td>
-							<div style="text-align: center;" v-for="hdItem,hdIndex in newItem.hdList" :key="hdIndex" v-html="hdItem.zx_name"></div>
-							<div style="text-align: center;color:#fff" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.hdList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(hdItem,hdIndex) in newItem.hdList" :key="hdIndex"
+							 v-html="hdItem.zx_name"></div>
+							<div style="text-align: center;color:#fff;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.hdList.length)"
+							 :key="obj.id"></div>
 						</td>
-
 						<td>
-							<div style="text-align: center" v-for="hdItem,hdIndex in newItem.hdList" :key="hdIndex" v-html="hdItem.score"></div>
-							<div style="text-align: center;color:#fff" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.hdList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(hdItem,hdIndex) in newItem.hdList" :key="hdIndex"
+							 v-html="hdItem.Job_share"></div>
+							<div style="text-align: center;color:#fff;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.hdList.length)"
+							 :key="obj.id"></div>
 						</td>
-
-
 						<td>
-							<div style="text-align: center;" v-for="hdItem,hdIndex in newItem.hdList" :key="hdIndex" v-html="hdItem.m_center"></div>
-							<div style="text-align: center;color:#fff" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.hdList.length)">无</div>
-						</td>
-
-
-
-
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(hdItem,hdIndex) in newItem.hdList" :key="hdIndex"
+							 v-html="hdItem.customer"></div>
+							<div style="text-align: center;color:#fff;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.hdList.length)"
+							 :key="obj.id"></div>
+						
+						</td>	
 						<td>
-							<div style="text-align: center;" v-for="sjItem,sjIndex in newItem.sjList" :key="sjIndex" v-html="sjItem.zx_name"></div>
-							<div style="color:#fff" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.sjList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(sjItem,sjIndex) in newItem.sjList" :key="sjIndex"
+							 v-html="sjItem.zx_name"></div>
+							<div style="text-align: center;color:#fff;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.sjList.length)"
+							 :key="obj.id"></div>
 						</td>
-
-
 						<td>
-							<div style="text-align: center;" v-for="sjItem,sjIndex in newItem.sjList" :key="sjIndex" v-html="sjItem.score"></div>
-							<div style="color:#fff" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.sjList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;" v-for="(sjItem,sjIndex) in newItem.sjList" :key="sjIndex"
+							 v-html="sjItem.Job_share"></div>
+							<div style="text-align: center;color:#fff;height:50px;line-height: 50px;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.sjList.length)"
+							 :key="obj.id"></div>
 						</td>
-
-
 						<td>
-							<div style="text-align: center;" v-for="sjItem,sjIndex in newItem.sjList" :key="sjIndex" v-html="sjItem.m_center"></div>
-							<div style="color:#fff" class='tab_null' v-for="obj in newItem.num - parseInt(newItem.sjList.length)">无</div>
+							<div style="text-align: center;height:50px;line-height: 50px;border-bottom:1px solid #000;" v-for="(sjItem,sjIndex) in newItem.sjList" :key="sjIndex"
+							 v-html="sjItem.customer"></div>
+							<div style="text-align: center;color:#fff;height:50px;line-height: 50px;border-bottom:1px solid #000;" class='tab_null' v-for="(obj,objIndex) in newItem.num - parseInt(newItem.sjList.length)"
+							 :key="obj.id"></div>
 						</td>
-
-
+						<td style="text-align: center;" v-html="newItem.pro[0].m_center"></td>						
 					</tr>
-
-
 				</tbody>
-				<tfoot>
-					<tr>
-						<td style="text-align: center;">序号</td>
-						<td style="text-align: center;">项目名称</td>
-						<td style="text-align: center;">商务</td>
-						<td style="text-align: center;">前端开发</td>
-						<td style="text-align: center;">工作占比</td>
-						<td style="text-align: center;">备注</td>
-						<td style="text-align: center;">后端开发</td>
-						<td style="text-align: center;">工作占比</td>
-						<td style="text-align: center;">备注</td>
-						<td style="text-align: center;">设计开发</td>
-						<td style="text-align: center;">工作占比</td>
-						<td style="text-align: center;">备注</td>
-					</tr>
-				</tfoot>
+
+				<Footer></Footer>
 			</table>
-			<div class="btn-box">
-				<div class='btn btn-outer' v-if="port" id="excell" @click="method5('dataTable')">导出Excle表格</div>
-				<div class='btn btn-outer btn-add' v-if="useAdd" @click="addInfo">添加</div>
-				<div class='btn btn-outer btn-del ' v-if="useAdd" @click="delTable">删除</div>
-			</div>
 		</div>
 
-
+			
 
 		<van-loading v-show="loading" class="loading" />
+
 	</div>
 </template>
 
@@ -142,7 +131,7 @@
 			return {
 				tableData: {
 					fromTime: '2019-07-20',
-					toTime: '2019-08-20',
+					toTime: '',
 					timeList: [],
 					kind: '',
 					nameList: ['设计制作阶段', '首页确定', '设计确认', '后期动效制作', '后端开发', '前端开发', '测试', '提审'],
@@ -448,10 +437,41 @@
 		},
 		mounted() {
 			this.xm_id = localStorage.getItem("xm_id")
-			// this.findDetails(this.xm_id)
-
-			this.findTabel()
-			// this.createTable();
+		},
+		components: {
+			Footer: () => import('components/footer.vue'),
+		},
+		computed: {
+			colorSelect(money) {
+				return (money) => {
+					let color = ''
+					if (money == '0-3W' || money == '0-5W') {
+						color = 'green'
+					} else if (money == '3-8W' || money == '5-10W') {
+						color = 'blue'
+					} else if (money == '8-15W' || money == '10-15W') {
+						color = 'orange'
+					} else if (money == '15W以上') {
+						color = 'red'
+					}
+					return color
+				}
+			},
+			nameSelect(money){
+				return (money) => {
+					let color = ''
+					if (money == '0-3W' || money == '0-5W') {
+						color = '绿色'
+					} else if (money == '3-8W' || money == '5-10W') {
+						color = '蓝色'
+					} else if (money == '8-15W' || money == '10-15W') {
+						color = '橙色'
+					} else if (money == '15W以上') {
+						color = '红色'
+					}
+					return color
+				}
+			}
 		},
 		methods: {
 			Cleanup() {
@@ -510,7 +530,6 @@
 				return function(table, name) {
 					if (!table.nodeType)
 						table = document.getElementById(table)
-					console.log(table)
 					var ctx = {
 						worksheet: name || 'Worksheet',
 						table: table.innerHTML
@@ -546,8 +565,6 @@
 				let _this = this;
 				let start = this.DayChange(new Date(this.tableData.toTime[0]));
 				let end = this.DayChange(new Date(this.tableData.toTime[1]));
-				console.log(this.DayChange(new Date(this.tableData.toTime[0])))
-				console.log(this.DayChange(new Date(this.tableData.toTime[1])))
 				params.append("first", start);
 				params.append("last", end);
 				this.$axios({
@@ -559,20 +576,26 @@
 					data: params
 				}).then((res) => {
 					if (res.data) {
-
 						this.projectDetailList = res.data.data
+						res.data.data.forEach((item)=>{
+							item.zx_cp = '';
+							item.creat_time = item.creat_time.split(' ')[0] ? item.creat_time.split(' ')[0] : item.creat_time;
+						})
+						console.log(res.data.data)
 						res.data.data.forEach((pItem, pIndex) => {
 							let sjList = [],
 								qdList = [],
 								hdList = []
 							pItem.pro.forEach((item) => {
-
+									
 								let data = {
 									zx_name: item.zx_name,
 									score: item.sorce,
 									m_center: item.m_center,
 									sale_name: pItem.sale_name,
 									pro_name: pItem.pro_name,
+									customer : item.customer,
+									Job_share : item.Job_share
 								}
 								if (item.zx_post == '设计') {
 									sjList.push(data)
@@ -583,8 +606,9 @@
 								} else if (item.zx_post == '后端') {
 									hdList.push(data)
 									this.hdProject.score = item.sorce
+								} else if (item.zx_post == '产品') {
+									pItem.zx_cp = item.zx_name
 								}
-
 							})
 							pItem.sjList = sjList
 							pItem.qdList = qdList
@@ -595,10 +619,9 @@
 							pItem.num = arrNew[2]
 
 						})
-						console.log(res.data.data)
-
+							
 						this.newList = res.data.data
-						console.log(newList)
+							
 						this.content = res.data.data[0].m_center
 					}
 				}).catch(() => {})
@@ -621,7 +644,6 @@
 							hdList = [],
 							csList = []
 						this.projectDetailList = res.data.data
-						console.log(res.data.data)
 						res.data.data.forEach((item) => {
 							let data = {
 								zx_name: item.zx_name,
@@ -656,7 +678,6 @@
 						arrList.push(sjList)
 
 						let newList = new Array();
-						console.log(arrList[2].length)
 						for (let i = 0; i < arrList[2].length; i++) {
 							let obj = new Object();
 							obj.qdname = ''
@@ -693,7 +714,6 @@
 							})
 							newList.push(obj)
 						}
-						console.log(newList)
 						this.newList = newList
 
 						this.content = res.data.data[0].m_center
@@ -737,6 +757,26 @@
 
 				})
 			},
+			DayChange(d) {
+				var date = d;
+				var seperator1 = "-";
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if (month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if (strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var data = ''
+				data =
+					date.getFullYear() +
+					seperator1 +
+					month +
+					seperator1 +
+					strDate
+				return data;
+			},
 			uncompileStr(code) {
 				code = unescape(code);
 				var c = String.fromCharCode(code.charCodeAt(0) - code.length);
@@ -765,417 +805,26 @@
 			timeChange(val) {
 				let _this = this;
 			},
-			changeKinds(val) {
-				let _this = this;
-				_this.tableData.moduleList.forEach((item) => {
-					if (item.sign == val) {
-						_this.tableData.kindsList = item.list
-						_this.tableData.kind = item.list[0].sign
-					}
-				})
-			},
-			findTabel() {
-				let _this = this
-				var params = new URLSearchParams();
-				params.append('xms_id', this.xms_id)
-				_this.$axios({
-					url: '/getSchedlist',
-					method: 'post',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					},
-					data: params
-				}).then((res) => {
-					let typeList = _this.tableData.typeList
-					typeList.forEach((item) => {
-						item.details = []
-						item.fromTime = '';
-						item.toTime = '';
-						item.afterTime = this.tableData.timeList.length;
-						item.lastTime = 0;
-						item.payTime = 0;
-					})
-					this.tableData.fromTime = '';
-					this.tableData.toTime = '';
-					typeList.forEach((typeItem) => {
-						typeItem.details = []
-					})
-					let bgColorList = this.tableData.colorList
-					res.data.data.forEach((item) => {
-						typeList.forEach((typeItem) => {
-							item.name = item.type
-							item.fromTime = item.start_time
-							item.toTime = item.end_time
-							item.payTime = _this.getDayAll(item.fromTime, item.toTime).length
-							let bgcolor = 'none'
-							bgColorList.forEach((bgItem) => {
-								if (bgItem.name == item.type) {
-									bgcolor = bgItem.bg
-									return false;
-								}
-							})
-							if (item.model == typeItem.sign) {
-								item.bgcolor = bgcolor
-								typeItem.details.push(item)
-							}
-						})
-					})
-					this.tableData.typeList = typeList
-					this.tableData.typeList.forEach((item) => {
-						if (item.details != '') {
-							item.details.forEach((dItem) => {
-								if (this.tableData.toTime == '') {
-									this.tableData.toTime = dItem.toTime
-								}
-								if (this.tableData.fromTime == '') {
-									this.tableData.fromTime = dItem.fromTime
-								}
-								let endTime = this.DateMinus(this.tableData.toTime, dItem.toTime)
-								let fromTime = this.DateMinus(dItem.fromTime, this.tableData.fromTime)
-								if (endTime > 0) {
-									this.tableData.toTime = dItem.toTime
-								}
-								if (fromTime > 0) {
-									this.tableData.fromTime = dItem.fromTime
-								}
-							})
-						}
-					})
-					this.tableData.timeList = this.getDayAll(this.tableData.fromTime, this.tableData.toTime)
-					this.tableData.typeList.forEach((item, index) => {
-						if (item.details == '') {
-							if (item.toTime == '') {
-								item.afterTime = this.getDayAll(this.tableData.fromTime, this.tableData.toTime).length
-							}
-						} else {
-							item.fromTime = item.details[0].fromTime
-							item.toTime = item.details[item.details.length - 1].toTime
-							item.payTime = this.getDayAll(item.fromTime, item.toTime).length
-							if (item.toTime == '') {
-								if (item.toTime == this.tableData.toTime) {
-									item.afterTime = 0
-								} else {
-									if (item.toTime == this.tableData.toTime) {
-										item.afterTime = this.getDayAll(item.toTime, this.tableData.toTime).length
-									} else {
-										item.afterTime = this.getDayAll(item.toTime, this.tableData.toTime).length - 1
-									}
-								}
-							} else {
-								if (item.toTime == this.tableData.toTime) {
-									item.afterTime = 0
-								} else {
-									if (item.toTime == this.tableData.toTime) {
-										item.afterTime = this.getDayAll(item.toTime, this.tableData.toTime).length
-									} else {
-										item.afterTime = this.getDayAll(item.toTime, this.tableData.toTime).length - 1
-									}
-								}
-
-							}
-						}
-					})
-					let payTime = 0;
-					this.tableData.typeList.forEach((item) => {
-						if (item.details != '') {
-							item.lastTime = this.getDayAll(this.tableData.fromTime, item.fromTime).length - 1
-						} else {
-							item.lastTime = 0
-						}
-					})
-				}).catch(() => {
-
-				})
-			},
-			addInfo() {
-				this.dialogForm = true;
-				this.tableData.module = ''
-				this.tableData.kind = ''
-			},
-			Record(mainIndex, e, timeIndex) {
-				this.touch = true;
-				this.mainIndex = mainIndex
-				this.beforeIndex = timeIndex
-			},
-			changeRecord(mainIndex, timeIndex) {
-				this.mainIndex = mainIndex
-				if (this.touch) {
-					let payTime = timeIndex + 1
-					this.payTime = payTime
-				}
-			},
-			showDialog(mainIndex, e, timeIndex) {
-				this.touch = false
-				this.mainIndex = mainIndex
-				this.detailsIndex = timeIndex
-				this.payTime = timeIndex - this.beforeIndex + 1
-				var el = e.currentTarget;
-				let typeList = this.tableData.typeList
-				typeList.forEach((item, index) => {
-					item.details.forEach((dItem) => {
-						if (item.index == 0) {
-							dItem.active = false;
-						} else {
-							dItem.active = true;
-						}
-					})
-				})
-				this.dialogFormVisible = true;
-				this.tableData.typeList = typeList;
-			},
 			scrollChange() {
 				let Index = document.getElementById('index')
 				Index.scrollIntoView()
-			},
-			sureAdd() {
-				let mainIndex = this.mainIndex
-				let kind = this.tableData.kind
-				let payTime = this.payTime
-				let _this = this,
-					model = _this.tableData.module,
-					type = _this.tableData.kind
-				let resultEnd = false
-				_this.tableData.typeList.forEach((item) => {
-					if (item.details != '') {
-						let result = item.details.some((dItem) => {
-							return dItem.name == kind
-						})
-						if (result) {
-							resultEnd = true
-						}
-					}
-				})
-				if (resultEnd) {
-					_this.$toast({
-						message: "类型已存在!",
-						duration: 1000
-					})
-					return;
-				}
-				if (model == '') {
-					_this.$toast({
-						message: "请选择模块!",
-						duration: 1000
-					})
-					return;
-				}
-				if (type == '') {
-					_this.$toast({
-						message: "请选择类别!",
-						duration: 1000
-					})
-					return;
-				}
-				if (_this.mainTime == '') {
-					_this.$toast({
-						message: "请选择时间!",
-						duration: 1000
-					})
-					return;
-				}
-				if (_this.DayChange(_this.mainTime[0]) == '' || _this.DayChange(_this.mainTime[1]) == '') {
-					_this.$toast({
-						message: "请选择时间!",
-						duration: 1000
-					})
-					return;
-				}
-				// else {
-				//     if(_this.mainTime[0].getDay() == 0 || _this.mainTime[0].getDay() == 6 || _this.mainTime[1].getDay() == 0 || _this.mainTime[1].getDay() == 6){
-				//         _this.$toast({
-				//             message : "起始时间不能为周末!",
-				//             duration : 1000
-				//         })
-				//         return ;
-				//     }
-				// }
-				var params = new URLSearchParams();
-				params.append('xms_id', this.xms_id);
-				params.append('start_time', _this.DayChange(_this.mainTime[0]));
-				params.append('end_time', _this.DayChange(_this.mainTime[1]));
-				params.append('model', model);
-				params.append('type', type);
-				// let obj = new Object();
-				// obj.xms_id = 91;
-				// obj.start_time = start_time;
-				// obj.end_time = end_time;
-				// obj.model = model;
-				// obj.type = type;
-				_this.$confirm('确认操作?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then((res) => {
-					this.loading = true;
-					_this.$axios({
-						url: '/getScheduling',
-						method: 'post',
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						data: params
-					}).then((res) => {
-						if (res.data.errcode == 0) {
-							setTimeout(() => {
-								this.loading = false;
-								setTimeout(() => {
-									this.$toast({
-										message: "添加成功!",
-										duration: 1000
-									})
-									this.dialogForm = false;
-									_this.findTabel();
-								}, 500)
-							}, 500)
-						} else {
-							setTimeout(() => {
-								this.loading = false;
-								setTimeout(() => {
-									this.$toast({
-										message: "" + res.data.msg + "!",
-										duration: 1000
-									})
-								}, 500)
-							}, 500)
-						}
-
-					}).catch(() => {
-
-					})
-				}).catch(() => {
-
-				});
-
-
 			},
 			getDate(datestr) {
 				var temp = datestr.split("-");
 				var date = new Date(temp[0], temp[1], temp[2]);
 				return date;
 			},
-			getDayAll(begin, end) {
-				var dateAllArr = new Array();
-				var ab = begin.split("-");
-				var ae = end.split("-");
-				var db = new Date();
-				db.setUTCFullYear(ab[0], ab[1] - 1, ab[2]);
-				var de = new Date();
-				de.setUTCFullYear(ae[0], ae[1] - 1, ae[2]);
-				var unixDb = db.getTime();
-				var unixDe = de.getTime();
-				let time = []
-				for (var k = unixDb; k <= unixDe;) {
-					// if((new Date(parseInt(k))).getDay() < 6 && (new Date(parseInt(k))).getDay() != 0){
-
-					//     date.time = ((new Date(parseInt(k))).getMonth()+1) +"-"+ (new Date(parseInt(k))).getDate()
-					//     var xq = '日一二三四五六'.charAt((new Date(parseInt(k))).getDay());
-					//     date.xq = xq
-					//     // date.
-					//     time.push(date)
-					// }
-					let date = {
-
-					}
-					date.time = ((new Date(parseInt(k))).getMonth() + 1) + "-" + (new Date(parseInt(k))).getDate()
-					var xq = '日一二三四五六'.charAt((new Date(parseInt(k))).getDay());
-					date.xq = xq
-					// date.
-					time.push(date)
-
-					k = k + 24 * 60 * 60 * 1000;
-				}
-				return time;
-			},
 			createTable() {
-				this.findResult();
-				// this.tableData.timeList = this.getDayAll(this.DayChange(new Date(this.tableData.toTime[0])), this.DayChange(new Date(
-				// 	this.tableData.toTime[1])))
-				// this.tableData.typeList.forEach((item) => {
-				// 	item.details = []
-				// 	item.fromTime = '';
-				// 	item.toTime = '';
-				// 	item.afterTime = this.tableData.timeList.length;
-				// 	item.lastTime = 0;
-				// 	item.payTime = 0;
-				// })
-			},
-			delTable() {
-				this.$confirm('此操作将永久删除该排期表, 是否继续?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.loading = true
-					let params = new URLSearchParams();
-					params.append('xms_id', this.xms_id);
-					this.$axios({
-						url: '/getSchedDel',
-						method: 'post',
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						data: params
-					}).then((res) => {
-						if (res.data.errcode == 0) {
-							setTimeout(() => {
-								this.loading = false;
-								setTimeout(() => {
-									this.$toast({
-										message: '删除成功!',
-										duration: 1000
-									});
-									this.findTabel()
-									this.tableData.timeList = []
-								}, 500)
-							}, 500)
-						} else {
-							setTimeout(() => {
-								this.loading = false;
-								setTimeout(() => {
-									this.$toast({
-										message: '请求失败!',
-										duration: 1000
-									});
-								}, 500)
-							}, 500)
-						}
-					}).catch(() => {
-						this.loading = false;
-						setTimeout(() => {
-							this.$toast({
-								message: '请求失败!',
-								duration: 1000
-							});
-						}, 500)
+				if(!this.tableData.toTime[0] ||  !this.tableData.toTime[1]){
+					this.$toast({
+						message: "请选择日期生成表格!",
+						duration: 1000
 					})
-				}).catch(() => {})
-			},
-			DateMinus(date1, date2) {
-				var sdate = new Date(date1);
-				var now = new Date(date2);
-				var days = now.getTime() - sdate.getTime();
-				var day = parseInt(days / (1000 * 60 * 60 * 24));
-				return day;
-			},
-			DayChange(d) {
-				var date = d;
-				var seperator1 = "-";
-				var month = date.getMonth() + 1;
-				var strDate = date.getDate();
-				if (month >= 1 && month <= 9) {
-					month = "0" + month;
+					return;
 				}
-				if (strDate >= 0 && strDate <= 9) {
-					strDate = "0" + strDate;
-				}
-				var data = ''
-				data =
-					date.getFullYear() +
-					seperator1 +
-					month +
-					seperator1 +
-					strDate
-				return data;
+				const loading = this.openLoading();
+				this.findResult();
+				loading.close();
 			},
 			table2Excel(filename) {
 				$(".table2excel").table2excel({
@@ -1190,17 +839,6 @@
 			},
 			formatTen(num) {
 				return num > 9 ? (num + "") : ("0" + num);
-			},
-			formatDate(date) {
-				var date = new Date(date)
-				var year = date.getFullYear();
-				var month = date.getMonth() + 1;
-				var day = date.getDate();
-				var hour = date.getHours();
-				var minute = date.getMinutes();
-				var second = date.getSeconds();
-				return year + "-" + this.formatTen(month) + "-" + this.formatTen(day) + " " + this.formatTen(hour) + ":" + this.formatTen(
-					minute) + ":" + this.formatTen(second);
 			},
 			verify() {
 				var system = {
@@ -1223,65 +861,14 @@
 					this.port = false
 				}
 			},
-			findPerson() {
-				this.$axios({
-					url: '/getnamelist',
-					method: 'post',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					}
-				}).then((res) => {
-					if (res.data) {
-						this.personList = res.data.data
-						res.data.data.forEach((item) => {
-							if (item.id == this.id) {
-								if (item.user_depar == '产品') {
-									this.useAdd = true
-								}
-							}
-						})
-					}
-				}).catch(() => {
-
-				})
-			}
 		},
 		created() {
-			// Date.prototype.format=function (){
-			//     var s='';
-			//     s+=this.getFullYear()+'-';          // 获取年份。
-			//     s+=(this.getMonth()+1)+"-";         // 获取月份。
-			//     s+= this.getDate();                 // 获取日。
-			//     return(s);                          // 返回日期。
-			// };
-			// let older = '2018-07-20';
-			// let newer = '2018-08-30'
-			//  初始化，查询表格
-			// this.tableData.timeList = this.getDayAll(older,newer)
-
 			let role = localStorage.getItem('role')
 			this.role = role
 			this.xms_id = localStorage.getItem('xms_id')
 			let id = localStorage.getItem('id', )
 			let uid = this.uncompileStr(id).split('&&')[1]
 			this.id = uid
-			this.tableData.typeList.forEach((item, index) => {
-				item.fromTime = item.details[0].fromTime
-				item.toTime = item.details[item.details.length - 1].toTime
-				item.payTime = this.getDayAll(item.fromTime, item.toTime).length
-				item.details.forEach((dItem) => {
-					dItem.payTime = this.getDayAll(dItem.fromTime, dItem.toTime).length
-				})
-			})
-			this.tableData.typeList.forEach((item) => {
-				item.details = []
-				item.fromTime = '';
-				item.toTime = '';
-				item.afterTime = this.tableData.timeList.length;
-				item.lastTime = 0;
-				item.payTime = 0;
-			})
-			this.findPerson()
 			this.verify()
 		}
 	}
@@ -1289,8 +876,9 @@
 
 <style scoped="scoped">
 	.table #dataTable tr td {
-		border-right:1px solid #000000 !important;
+		border-right: 1px solid #000000 !important;
 	}
+
 	.tab_null {
 		color: transparent;
 	}
@@ -1302,7 +890,8 @@
 	#scheduling {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		min-height: 100vh;
+		position: relative;
 	}
 
 	#scheduling .btn-box {
@@ -1325,10 +914,18 @@
 
 	.table {
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		flex-direction: column;
 		padding: 0 1rem;
 		margin: 0 auto;
+		align-items: center;
+		min-height: 100vh;
+		position: relative;
+		padding-bottom : 1rem;
+	}
+
+	.table2excel {
+		margin-top: 20px;
 	}
 
 	#scheduling .el-range-separator {
@@ -1347,10 +944,10 @@
 
 	.drawTable {
 		margin-left: 0.25rem;
-		padding: 0.1rem 0.5rem;
+		padding: 10px 30px;
 		background: #2db7f5;
 		color: #fff;
-		border-radius: 0.2rem;
+		border-radius: 25px;
 		cursor: pointer;
 	}
 
@@ -1373,7 +970,6 @@
 	}
 
 	.table table tr td>div {
-		padding: 5px 10px !important;
 		position: relative;
 	}
 
@@ -1464,5 +1060,9 @@
 
 	.btn-add {
 		margin: 0 0.5rem;
+	}
+	
+	.btn_table {
+		margin-left: 20px;
 	}
 </style>

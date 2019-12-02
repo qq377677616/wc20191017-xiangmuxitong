@@ -7,7 +7,7 @@ function resolve(dir) {
 }
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/resources/game/wechat/dxl/cmkj_search/' : '/',
-  //   publicPath: process.env.NODE_ENV === 'production' ? '/resources/game/wechat/dxl/cmkj/' : '/',
+    // publicPath: process.env.NODE_ENV === 'production' ? '/resources/game/wechat/dxl/wckj/' : '/',
   //   publicPath: process.env.NODE_ENV === 'production' ? '/resources/game/wechat/dxl/wckj/' : '/',
   lintOnSave: true,
   chainWebpack: (config) => {

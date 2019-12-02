@@ -1,30 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0, user-scalable=no">
-    <meta name="format-detection" content="telephone=yes"/>
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0, user-scalable=no">
+		<meta name="format-detection" content="telephone=yes" />
+		<link rel="icon" href="<%= BASE_URL %>favicon.ico">
 
-    <script>
-      var _mtac = {"senseQuery":1};
-        var mta = document.createElement("script");
-        mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
-        mta.setAttribute("name", "MTAH5");
-        mta.setAttribute("sid", "500690410");
-        mta.setAttribute("cid", "500690411");
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(mta, s);
-    </script>
-    <title>网晨项目查询</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but wckj_search doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
-
+		<script>
+			var _mtac = {
+				"senseQuery": 1
+			};
+			var mta = document.createElement("script");
+			mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+			mta.setAttribute("name", "MTAH5");
+			mta.setAttribute("sid", "500690410");
+			mta.setAttribute("cid", "500690411");
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(mta, s);
+		</script>
+		<title>网晨平头哥管理系统</title>
+	</head>
+	<body>
+		<noscript>
+			<strong>We're sorry but wckj_search doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+		</noscript>
+		<div id="app"></div>
+		<!-- built files will be auto injected -->
+	</body>
+	<script src="https://cdn.bootcss.com/zepto/1.1.7/zepto.min.js"></script>
+	<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js "></script>
+	<script>
+		var baseUrl = document.location.protocol == 'https' ? "https://game.flyh5.cn" : "http://game.flyh5.cn";
+		// var href = window.location.href.replace(/#.*/, '');
+		var href = 'http://game.flyh5.cn/resources/game/wechat/dxl/cmkj_search/index.html'
+		//    获取签名
+		let str =
+			'var wx_config={"appId":"wx7c3ed56f7f792d84","nonceStr":"D9dvahXkEPtNPH8l","timestamp":1572504341,"url":"http:\/\/game.flyh5.cn\/game\/twolevel_autho\/share.php","signature":"60758d8348a2502efa07f0f4196b72ea4e7a48f8","rawString":"jsapi_ticket=gdzxN2g622vVfv3lEXnBsunsepCtM22D9VvbCXgHcoFsa5FEn5WazGIjzKledIB0L7ZPhsOfxzAziFxeZoFmtw&noncestr=D9dvahXkEPtNPH8l×tamp=1572504341&url=http:\/\/game.flyh5.cn\/game\/twolevel_autho\/share.php"}'
+		$.ajax({
+			url: baseUrl + '/game/twolevel_autho/share.php?auth_appid=wx7c3ed56f7f792d84&type=js&isonlyopenid=true',
+			type: 'get',
+			data: {},
+			async : false,
+			success: function(resC) {
+				let result = JSON.parse(resC.split('wx_config=')[1])
+				wx.config({
+					// debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+					appId: result.appId, // 必填，公众号的唯一标识
+					timestamp: result.timestamp, // 必填，生成签名的时间戳
+					nonceStr: result.nonceStr, // 必填，生成签名的随机串
+					signature: result.signature, // 必填，签名
+					jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
+				});
+				wx.ready(function() {
+					// config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+					console.log(document.location.protocol + '/resources/game/wechat/dxl/cmkj_search/img/icons/favicon-32x32.png')
+					var shareData = {
+						title: '网晨项目查询系统',
+						desc: '全面化定制 用心打造服务',
+						link: document.location.protocol + '/resources/game/wechat/dxl/cmkj_search/index.html',
+						imgUrl: document.location.protocol + '/resources/game/wechat/dxl/cmkj_search/img/icons/favicon-32x32.png'
+					};
+					//获取“分享给朋友”按钮点击状态及自定义分享内容接口
+					wx.onMenuShareAppMessage(shareData);
+					//获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
+					wx.onMenuShareTimeline(shareData);
+					//获取“分享到QQ”按钮点击状态及自定义分享内容接口
+					// wx.onMenuShareQQ(shareData);
+				});
+			},
+			error: function(err) {
+				// console.log(err);
+			}
+		})
+	</script>
 </html>
