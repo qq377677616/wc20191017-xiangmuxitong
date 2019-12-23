@@ -12,7 +12,8 @@
 			<el-button class="search" @click.native="Search">搜索</el-button>
 		</div>
 		<van-collapse v-model="activeName" accordion>
-			<van-collapse-item v-for="(Item,Index) in BranchList" :title="Item.branch" :value="Item.personList.length" class="office-list-content" :key="Index" :name="Index" :disabled="Item.personList ==''">
+			<van-collapse-item v-for="(Item,Index) in BranchList" :title="Item.branch" :value="Item.personList.length" class="office-list-content"
+			 :key="Index" :name="Index" :disabled="Item.personList ==''">
 				<div class="office-list">
 					<div class="office-info" v-for="(personItem,personIndex) in Item.personList" :key="personIndex">
 						<div class="office-name">
@@ -32,13 +33,14 @@
 			<van-button type="info" class="van-submit" @click.native="showPopup">添加职员</van-button>
 			<Footer></Footer>
 		</div>
-		<el-dialog :visible.sync="dialogFormVisible" :append-to-body='true'>
+		<el-dialog class="office_dialog" :visible.sync="dialogFormVisible" :append-to-body='true'>
 			<el-form ref="form" label-width="80px">
 				<el-form-item label="职员姓名">
 					<el-input @click.native="inputClick($event)" v-model="personInfo.name" @blur="scrollChange" placeholder="请输入姓名"></el-input>
 				</el-form-item>
 				<el-form-item label="手机号码">
-					<el-input @click.native="inputClick($event)" v-model="personInfo.phone" @blur="scrollChange" placeholder="请输入手机号码" type="tel" maxlength="11"></el-input>
+					<el-input @click.native="inputClick($event)" v-model="personInfo.phone" @blur="scrollChange" placeholder="请输入手机号码"
+					 type="tel" maxlength="11"></el-input>
 				</el-form-item>
 				<el-form-item label="职员岗位">
 					<el-select v-model="personInfo.post" placeholder="请选择岗位">
@@ -52,7 +54,7 @@
 			</el-form>
 		</el-dialog>
 		<van-loading v-show="loading" class="loading" />
-		
+
 	</div>
 </template>
 
@@ -153,7 +155,7 @@
 			};
 		},
 		components: {
-			Footer : () => import('components/footer.vue'),
+			Footer: () => import('components/footer.vue'),
 		},
 		methods: {
 			inputClick(e) {
@@ -215,8 +217,8 @@
 				}).catch(() => {
 					loading.close();
 					this.$toast({
-						message : '请求失败!',
-						duration : 1000
+						message: '请求失败!',
+						duration: 1000
 					})
 				})
 			},
@@ -268,6 +270,13 @@
 						duration: 1000
 					});
 					return;
+				}
+				if (!(/^1[3456789]\d{9}$/.test(this.personInfo.phone))) {
+					this.$toast({
+						message: '手机号码有误!',
+						duration: 1000
+					});
+					return false;
 				}
 				let Index = ''
 				this.postList.forEach((item) => {

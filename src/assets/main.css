@@ -331,7 +331,7 @@ body {
 
 .wc-page-content {
 	padding-top: 50px;
-	padding-bottom: 70px !important;
+	padding-bottom: 80px !important;
 }
 
 #execute .wc-page-content {
@@ -760,6 +760,7 @@ body {
 	padding: 0 15px;
 	/* margin-bottom: 15px; */
 	text-align: center;
+	margin-top:10px;
 }
 
 .van-slider {
@@ -867,7 +868,7 @@ body {
 .statistics_box {
 	display: flex;
 	align-items: center;
-	margin: 0 5px;
+	margin: 0 3px;
 }
 
 .project-num span {
@@ -1027,7 +1028,11 @@ body {
 	flex-direction: row;
 	justify-content: space-between;
 }
-
+@media screen and (min-width:800px) {
+	.zn_name {
+		min-width: 75px;
+	}
+}
 .zn_name {
 	width: 4em;
 	max-width: 4em;
@@ -1098,4 +1103,25 @@ body {
 	}
 	.remarks .van-field__label {
 		color : #909399;
+	}
+	.office_dialog .el-form-item__content {
+		width: 100%;
+	}
+	.statistics {
+		/* font-size:12px; */
+	}
+	.statistics_left {
+		font-size:12px;
+	}
+	body .card-top-left {
+		padding-left:15px !important;
+	}
+	body .card-top {
+		font-size:15px;
+	}
+	body .card-top-right {
+		font-size:15px;
+	}
+	body .type-info-name >span:nth-child(1) {
+		font-size:15px;
 	}

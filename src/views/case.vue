@@ -5,7 +5,7 @@
 		<div class="wc-page-top">
 			<div class="top-name">
 				<div class="top-close iconfont icon-zuojiantou" @click="backLast"><span>返回</span></div>
-				<div class="top-title">案例分析</div>
+				<div class="top-title">行业分析</div>
 			</div>
 		</div>
 		<div class="table" border="1">
@@ -13,76 +13,74 @@
 				<el-input @click.native="inputClick($event)" placeholder="请输入姓名" v-model="search" @blur="scrollChange" clearable>
 				</el-input>
 				<el-button class="search" @click.native="Search()">搜索</el-button>
-				<el-button class="search primary" plain @click.native="addCase">添加案例</el-button>
+				<el-button class="search primary" plain @click.native="addCase">添加信息</el-button>
 				<el-button class='btn_table' type='primary' id="excell" @click="method5('dataTable')" plain>导出Excle表格</el-button>
 			</div>
 			<table class="table2excel" id="dataTable">
 				<tr>
-					<td style="min-width: 300px;text-align:center;">行业</td>
-					<td style="min-width: 300px;text-align:center;">客户名称</td>
-					<td style="min-width: 100px;text-align:center;">品牌名称</td>
-					<td style="min-width: 100px;text-align:center;">品牌标语</td>
-					<td style="min-width: 100px;text-align:center;">品牌价值观</td>
-					<td style="min-width: 100px;text-align:center;" v-for="longItem in longer" :key="longItem.id">
-
+					<td style="width:7%;width:min-width: 100px;text-align:center;">行业</td>
+					<td style="width:7%;min-width: 100px;text-align:center;">客户名称</td>
+					<td style="width:7%;min-width: 100px;text-align:center;">品牌名称</td>
+					<td style="width:7%;min-width: 100px;text-align:center;">品牌标语</td>
+					<td style="width:7%;min-width: 100px;text-align:center;">品牌价值观</td>
+					<td style="text-align:center;">
 						<table>
 							<tr>
-								<td colspan='6' style="text-align:center;border-bottom:1px solid #000;">行业龙头</td>
+								<td colspan='6' style="width:7%;text-align:center;border-bottom:1px solid #000;">行业龙头</td>
 							</tr>
 							<tr>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">产品名称</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">产品价格</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">直接竞品</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">对比优势</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">对比劣势</td>
-								<td style='min-width: 300px;text-align:center;'>产品人群定位</td>
+								<td style="width:7%;min-width: 100px;text-align:center;border-right:1px solid #000;">产品名称</td>
+								<td style="width:7%;min-width: 100px;text-align:center;border-right:1px solid #000;">产品价格</td>
+								<td style="width:7%;min-width: 100px;text-align:center;border-right:1px solid #000;">直接竞品</td>
+								<td style="width:7%;min-width: 100px;text-align:center;border-right:1px solid #000;">对比优势</td>
+								<td style="width:7%;min-width: 100px;text-align:center;border-right:1px solid #000;">对比劣势</td>
+								<td style='width:7%;min-width: 200px;max-width:200px;text-align:center;'>产品人群定位</td>
 							</tr>
 						</table>
 					</td>
-					<td style="min-width: 300px;text-align:center;">优秀案例</td>
-					<td style="min-width: 300px;text-align:center;">操作</td>
+					<td style="width:7%;min-width: 100px;text-align:center;">优秀案例</td>
+					<td style="width:7%;min-width: 100px;text-align:center;">操作</td>
 				</tr>
 				<tr v-for="(dataItem,dataIndex) in dataList" :key="dataItem.Id">
-					<td style="min-width: 300px;text-align:center;">{{dataItem.trade_name}}</td>
-					<td style="min-width: 300px;text-align:center;">{{dataItem.customer_name}}</td>
-					<td style="min-width: 300px;text-align:center;">{{dataItem.brand_name}}</td>
-					<td style="min-width: 300px;text-align:center;">{{dataItem.brand_slogan}}</td>
-					<td style="min-width: 300px;text-align:center;">{{dataItem.brand_value}}</td>
-
-					<td style="min-width: 300px;text-align:center;" v-for="ext in dataItem.ext" :key="ext.id">
-						<table>
+					<td  style="min-width: 100px;text-align:center;">{{dataItem.trade_name}}</td>
+					<td  style="min-width: 100px;text-align:center;">{{dataItem.customer_name}}</td>
+					<td  style="min-width: 100px;text-align:center;">{{dataItem.brand_name}}</td>
+					<td  style="min-width: 100px;text-align:center;">{{dataItem.brand_slogan}}</td>
+					<td style="min-width: 100px;text-align:center;">{{dataItem.brand_value}}</td>
+					
+					<td>
+						<table style="text-align:center;" v-for="ext in dataItem.ext" :key="ext.id">
 							<tr>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">{{ext.product_name}}</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">{{ext.product_price}}</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">{{ext.direct_pro}}</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">{{ext.comparative_a}}</td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;">{{ext.comparative_d}}</td>
-								<td style="min-width: 300px;text-align:center;">
-								<img width="80px" height="80px" class='pro_img' :src="ext.product_p"/>
+								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.product_name}}</td>
+								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.product_price}}</td>
+								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.direct_pro}}</td>
+								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.comparative_a}}</td>
+								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.comparative_d}}</td>
+								<td style="width:7%;min-width: 200px;max-width:200px;text-align:center;" v-html="ext.product_p">
 								</td>
 							</tr>
 						</table>
 					</td>
-					<td style="min-width: 100px;text-align:center;" v-for="ext in (longer - dataItem.ext.length)"
+<!-- 					<td style="min-width: 100px;text-align:center;" v-for="ext in (longer - dataItem.ext.length)"
 					 :key="ext.id">
 						<table>
 							<tr>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 300px;text-align:center;border-right:1px solid #000;"></td>
-								<td style='min-width: 300px;text-align:center;'></td>
+								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
+								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
+								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
+								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
+								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
+								<td style='min-width: 100px;text-align:center;'></td>
 							</tr>
 						</table>
-					</td>
-					<td style="min-width: 300px;text-align:center;">
+					</td> -->
+					<td style="width:7%;min-width: 100px;text-align:center;">
 						{{dataItem.excellent_case}}
 					</td>
-					<td style="min-width: 300px;text-align:center;">
+					<td style="width:8%;min-width: 100px;text-align:center;">
 						<table>
 							<tr>
-								<td style='min-width: 300px;text-align:center;'>
+								<td style='width:7%;min-width: 100px;text-align:center;'>
 									<el-button type="primary" plain style="padding:5px 10px" @click.native="showCase(dataItem.id,dataIndex)">修改</el-button>
 									<el-button type="danger" plain style="padding:5px 10px" @click.native="deleteTable(dataItem.id)">删除</el-button>
 									<!-- 										<span style="margin-left:20px;background: #ff5500;color:#fff;border-radius: 10px;padding:5px 20prx">修改</span>
@@ -129,10 +127,11 @@
 					<template slot="prepend">优秀案例:</template>
 				</el-input>
 			</div>
-
+				
 			<div class='input_form'>
 				<div class='input_title'>行业龙头: <i class="el-icon-circle-plus c_info" @click="addTrade()"></i></div>
 				<div v-for="(listItem,listIndex) in result.list" :key="listIndex">
+					<div style="margin-bottom:15px;">产品信息：</div>
 					<el-input placeholder="请输入内容" v-model="listItem.name">
 						<template slot="prepend">产品名称:</template>
 					</el-input>
@@ -148,18 +147,18 @@
 					<el-input placeholder="请输入内容" v-model="listItem.lessness">
 						<template slot="prepend">对比劣势:</template>
 					</el-input>
-					<div class='pro_position'>
+					<el-input placeholder="请输入内容" v-model="listItem.position">
+						<template slot="prepend">产品人群定位:</template>
+					</el-input>
+		<!-- 			<div class='pro_position'>
 						<span>产品人群定位</span>
-					
-					
-					
 						<div class="member_content member_img">
 							<el-image :src="listItem.position" v-if="listItem.position" fit="cover">
 					
 							</el-image>
 							<input type="file" class="upload" @change="inputerFinish($event,listIndex)" ref="inputerFinish">
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="submit_box">
 					<el-button type='primary' plain @click.native="addResult()">新增</el-button>
@@ -201,6 +200,7 @@
 			<div class='input_form'>
 				<!-- <div class='input_title'>行业龙头: <i class="el-icon-circle-plus c_info" @click="addTrade()"></i></div> -->
 				<div v-for="(listItem,listIndex) in result.list" :key="listIndex">
+					<div style="margin-bottom:15px;">产品信息：</div>
 					<el-input placeholder="请输入内容" v-model="listItem.name">
 						<template slot="prepend">产品名称:</template>
 					</el-input>
@@ -216,7 +216,10 @@
 					<el-input placeholder="请输入内容" v-model="listItem.lessness">
 						<template slot="prepend">对比劣势:</template>
 					</el-input>
-					<div class='pro_position'>
+					<el-input placeholder="请输入内容" v-model="listItem.position">
+						<template slot="prepend">产品人群定位:</template>
+					</el-input>
+<!-- 					<div class='pro_position'>
 						<span>产品人群定位</span>
 
 
@@ -227,7 +230,7 @@
 							</el-image>
 							<input type="file" class="upload" @change="inputerUpdate($event,listIndex)" ref="inputerUpdate">
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="submit_box">
 					<el-button type='primary' plain @click.native="updateResult()">修改</el-button>
@@ -253,10 +256,10 @@
 					<el-input placeholder="请输入内容" v-model="addOpinion.lessness">
 						<template slot="prepend">对比劣势:</template>
 					</el-input>
-					<!-- 					<el-input placeholder="请输入内容" v-model="addOpinion.position">
+					<el-input placeholder="请输入内容" v-model="addOpinion.position">
 						<template slot="prepend">产品人群定位:</template>
-					</el-input> -->
-					<div class='pro_position'>
+					</el-input>
+<!-- 					<div class='pro_position'>
 						<span>产品人群定位</span>
 
 
@@ -268,7 +271,7 @@
 							<input type="file" class="upload" @change="inputerAdd($event)" ref="inputerAdd">
 						</div>
 
-					</div>
+					</div> -->
 				</div>
 				<div class="submit_box">
 					<el-button type='primary' plain @click.native="addTradeResult()">添加信息</el-button>
@@ -573,9 +576,12 @@
 					if (res.data) {
 						let data = res.data.data ? res.data.data : [];
 						let ext = 0;
-
-						res.data.data.forEach((item) => {
+						let newData = [];	
+						data.forEach((item) => {
 							ext = item.ext.length > ext ? item.ext.length : ext;
+							if(item.ext.length){
+								newData.push(item)
+							}
 						})
 						this.longer = ext;
 						this.dataList = data;
@@ -1213,6 +1219,7 @@
 		align-items: center;
 		min-height: 100vh;
 		position: relative;
+		width: 100%;
 	}
 
 	#scheduling .el-range-separator {
@@ -1253,12 +1260,16 @@
 	.table2excel tr td>div:last-child {
 		border-bottom: none;
 	}
+	
+/* 	.table2excel > tr > td {
+		
+	} */
 
 	.table2excel>tr>td {
 		/* padding: 0.1rem 0.3rem; */
 		border: 1px solid #000 !important;
 		text-align: center;
-		white-space: nowrap;
+		/* white-space: nowrap; */
 		color: #000;
 		-webkit-user-select: none;
 		-moz-user-select: none;
@@ -1275,7 +1286,9 @@
 	.table2excel table  >tr >td:last-child {
 		border-right : none
 	} */
-	.table2excel table>tr>td {}
+	.table2excel tr>td>table:nth-child(2n) {
+		border-top:1px solid #000;
+	}
 
 	.table table tr .has_content {
 		padding: 0;
@@ -1284,10 +1297,12 @@
 	.table2excel {
 		margin: 40px 0;
 		font-size: 12px;
+		width: 100%;
 	}
-
+	
 	.table2excel tr td {
 		height: 100px;
+		word-wrap:break-word;
 		/* line-height: 100px; */
 	}
 	
@@ -1467,5 +1482,12 @@
 		width: 100%;
 		height: 100%;
 		opacity: 0;
+	}
+	
+	@media screen and (max-width:1900px) {
+		table tr td .el-button:nth-child(2){
+			margin-left:0px;
+			margin-top:5px;
+		}
 	}
 </style>

@@ -890,15 +890,15 @@
 		bottom: 0px;
 		width: 100%;
 		// padding: 15px 25px 25px;
-		padding: 10px 45px 30px;
+		padding: 10px 45px 25px;
 		box-sizing: border-box;
 		background: #f5f5f5;
 	}
 
 	.add-submit {
-		font-size: 16px;
-		height : 40px;
-		line-height : 40px;
+		font-size: 14px;
+		height : 35px;
+		line-height : 35px;
 		letter-spacing: 1px;
 		width: 100%;
 		border-radius: 5px;
@@ -1015,8 +1015,8 @@
 	.appraise-container {
 		padding: 10px 10px;
 		color: #666;
-		letter-spacing: 1px;
-		font-size: 16px;
+		// letter-spacing: 1px;
+		font-size: 13px;
 	}
 
 	.info-score {
@@ -1044,6 +1044,7 @@
 		color: #fff;
 		cursor: pointer;
 		margin-right: 5px;
+		font-size: 12px;
 	}
 	.set_score {
 		margin-left : 10px;
@@ -1059,15 +1060,21 @@
 		margin-left : 15px;
 		display: flex;
 		align-items: center;
+		line-height: 1.5;
 	}
 	.set_score_top_box {
 		padding : 0 20px;
+		font-size: 12px;
 	}
 	.set_score_top_box .score_icon {
 		margin : 0;
+		margin-top:2px;
 	}
 	.set_score_top_box .set_score{
 		margin : 0;
+		padding-bottom:5px;
+		margin-top:5px;
+		margin-left:0;
 	}
 	.icon_count {
 		min-width: 100px;

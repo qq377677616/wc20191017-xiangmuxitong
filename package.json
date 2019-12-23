@@ -41,6 +41,7 @@
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "postcss-px2rem-exclude": "^0.0.6",
+    "vue-clipboard2": "^0.3.1",
     "vue-infinite-scroll": "^2.0.2",
     "vue-template-compiler": "^2.6.10"
   }

@@ -31,7 +31,7 @@
 	}
 
 	.card-top {
-		font-size: 16px;
+		font-size: 15px;
 		display: flex;
 		justify-content: space-between;
 		padding: 15px 10px;
@@ -60,7 +60,7 @@
 	}
 
 	.card-top-right {
-		font-size: 16px;
+		font-size: 15px;
 	}
 
 	.card-left-type,

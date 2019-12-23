@@ -73,34 +73,48 @@
 							<div class="type-wrapper-list-details">
 								<div class="type-wrapper-container" v-for="(projectDetailsItem,projectDetailsIndex) in projectItem.ext" :key="projectDetailsIndex"
 								 v-show="projectItem.ext.length != 0">
-									<div class="type-info-title">
-										<div class="type-info-name">
-											<span v-html="projectDetailsItem.zx_name"></span><span v-html="projectDetailsItem.design"></span>
+									<div class="container_center">
+										<div class="type-info-title">
+											<div class="type-info-name">
+												<span v-html="projectDetailsItem.zx_name"></span><span v-html="projectDetailsItem.design"></span>
+											</div>
+											<div class="type-info-time" v-show="!projectDetailsItem.isCS">
+												<span v-html="projectDetailsItem.creat_time ? projectDetailsItem.creat_time : ''"></span>
+											</div>
 										</div>
-										<div class="type-info-time" v-show="!projectDetailsItem.isCS">
-											<span v-html="projectDetailsItem.creat_time ? projectDetailsItem.creat_time : ''"></span>
+										<el-input @click.native="inputClick($event)" v-if="!projectDetailsItem.isCS" class="type-info-details" type="textarea"
+										 autosize placeholder="项目进度描述" v-model="projectDetailsItem.centen_log" @input="projectMonitor(projectIndex,projectDetailsIndex)"
+										 @blur="scrollChange" :disabled="!projectDetailsItem.canChange">
+										</el-input>
+										<div :class="['opertation',{'cp-icon-box':projectDetailsItem.isCS}]">
+											<!-- 										<div class="block" v-show="!projectDetailsItem.isCS">
+												<van-slider v-model="projectDetailsItem.detail.speed" :step="5" bar-height="5px" @drag-end="slideChange(projectDetailsIndex)"
+												 :disabled="!projectDetailsItem.canChange" />
+												<span class="slider-val">{{projectDetailsItem.detail.speed + "%"}}</span>
+											</div> -->
+											<div class="block" v-show="!projectDetailsItem.isCS">
+												<el-slider v-model="projectDetailsItem.speed" :step="5" height="5px" @change="slideChange(projectDetailsIndex)"
+												 :disabled="!projectDetailsItem.canChange"></el-slider>
+												<span class="slider-val">{{projectDetailsItem.speed + "%"}}</span>
+											</div>
+											<div :class="{'cp-icon': projectDetailsItem.isCS}">
+												<!-- <van-icon name="delete" color="red" size="20px" @click.native="deletePerson(projectDetailsItem.id,projectItem.id)" /> -->
+
+												<div class="icon-wrap"><i class="el-icon-delete c_danger" @click="deletePerson(projectDetailsItem.log_id,projectItem.id,projectDetailsIndex)"></i></div>
+											</div>
 										</div>
 									</div>
-									<el-input @click.native="inputClick($event)" v-if="!projectDetailsItem.isCS" class="type-info-details" type="textarea"
-									 autosize placeholder="项目进度描述" v-model="projectDetailsItem.centen_log" @input="projectMonitor(projectIndex,projectDetailsIndex)"
-									 @blur="scrollChange" :disabled="!projectDetailsItem.canChange">
-									</el-input>
-									<div :class="['opertation',{'cp-icon-box':projectDetailsItem.isCS}]">
-										<!-- 										<div class="block" v-show="!projectDetailsItem.isCS">
-											<van-slider v-model="projectDetailsItem.detail.speed" :step="5" bar-height="5px" @drag-end="slideChange(projectDetailsIndex)"
-											 :disabled="!projectDetailsItem.canChange" />
-											<span class="slider-val">{{projectDetailsItem.detail.speed + "%"}}</span>
-										</div> -->
-										<div class="block" v-show="!projectDetailsItem.isCS">
-											<el-slider v-model="projectDetailsItem.speed" :step="5" height="5px" @change="slideChange(projectDetailsIndex)"
-											 :disabled="!projectDetailsItem.canChange"></el-slider>
-											<span class="slider-val">{{projectDetailsItem.speed + "%"}}</span>
-										</div>
-										<div :class="{'cp-icon': projectDetailsItem.isCS}">
-											<!-- <van-icon name="delete" color="red" size="20px" @click.native="deletePerson(projectDetailsItem.id,projectItem.id)" /> -->
-
-											<div class="icon-wrap"><i class="el-icon-delete c_danger" @click="deletePerson(projectDetailsItem.log_id,projectItem.id,projectDetailsIndex)"></i></div>
-										</div>
+									<div class="data_center">
+										<table>
+											<tr>
+												<td :class="{'data_active' : dataItem.hasCard}" v-for="dataItem,dataIndex in projectDetailsItem.daysList">
+													<span>{{dataItem.name}}</span>
+													<i class="data_select el-icon-check" v-if="dataItem.hasCard"></i>
+												</td>
+											</tr>
+										</table>
+										<el-button type="primary" class="add_card" @click.native="addCard(projectDetailsItem.log_id,projectItem.id,projectDetailsIndex)"
+										 v-if="projectDetailsItem.canChange" :disabled="projectDetailsItem.hasCard">打卡</el-button>
 									</div>
 								</div>
 								<div class="update-container">
@@ -116,13 +130,11 @@
 											<!-- <van-icon name="add" color="#189df1" size="20px" @click.native="showAddress(projectIndex,projectItem.id,projectItem)" /> -->
 											<span>项目地址</span>
 										</div>
-
-
 										<div class="overhead">
 											<el-button type="primary" class="btn-overhead" @click.native="overHead(projectIndex,projectItem.id)" v-show="personType == 2"
 											 :disabled="projectItem.is_type == 2">置顶</el-button>
 											<el-button type="primary" class="btn-overhead" @click.native="canceloverHead(projectIndex,projectItem.id)"
-											 v-show="personType == 2" :disabled="projectItem.is_type != 2">取消置顶</el-button>										 
+											 v-show="personType == 2" :disabled="projectItem.is_type != 2">取消置顶</el-button>
 										</div>
 									</div>
 									<div class="rate-box" v-if="projectItem.ext.length != 0">
@@ -223,31 +235,27 @@
 						title: '0-3W'
 					}, {
 						title: '0-5W'
-					}	
-					]
+					}]
 				}, {
 					color: '#45e5d9',
 					num: 0,
-					priceList: [
-					{
+					priceList: [{
 						title: '3-5W'
 					}]
-				},{
+				}, {
 					color: 'blue',
 					num: 0,
-					priceList: [
-						{
-							title: '5-10W'
-						},{
+					priceList: [{
+						title: '5-10W'
+					}, {
 						title: '3-8W'
 					}, ]
 				}, {
 					color: 'orange',
 					num: 0,
-					priceList: [
-						 {
-							title: '10-15W'
-						},{
+					priceList: [{
+						title: '10-15W'
+					}, {
 						title: '8-15W'
 					}]
 				}, {
@@ -327,7 +335,7 @@
 					let color = ''
 					if (money == '0-3W' || money == '0-5W') {
 						color = 'green'
-					}else if (money == '3-5W') {
+					} else if (money == '3-5W') {
 						color = '#45e5d9'
 					} else if (money == '3-8W' || money == '5-10W') {
 						color = 'blue'
@@ -338,7 +346,7 @@
 					}
 					return color
 				}
-			},
+			}
 		},
 		mounted() {
 			let type = localStorage.getItem('type');
@@ -361,7 +369,78 @@
 			}, 1500)
 		},
 		methods: {
-			toFx(){
+			// 打卡
+			addCard(uid, proid, index) {
+				let _this = this;
+				_this.log_id = uid;
+				// _this.texId = uid;
+				_this.extIndex = index;
+				let formData = new FormData();
+				formData.append('uid', uid);
+				formData.append('proid', proid)
+				const loading = _this.openLoading();
+				_this.$axios({
+					url: '/getAddpunch',
+					method: 'post',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: formData
+				}).then((res) => {
+					if (res.data.errcode == 0) {
+						setTimeout(() => {
+							loading.close();
+							setTimeout(() => {
+								_this.$toast({
+									message: '打卡成功!',
+									duration: 1000
+								});
+								let id = _this.nowDetailId;
+								let projectList = this.projectList
+								let pIndex = 0
+								for(let prop in projectList){
+									if(projectList[prop].id == id){
+										pIndex = prop;
+										projectList[prop].ext[index].daysList.forEach((dayItem,index)=>{
+											if (dayItem.name == this.nowDays) {
+												dayItem.hasCard = true;
+											}
+										})				
+										projectList[prop].ext[index].hasCard = true
+										break;
+									}
+								}								
+								this.$set(this.projectList[pIndex],pIndex,projectList[pIndex]);
+							}, 500)
+						}, 500)
+					} else {
+						setTimeout(() => {
+							loading.close();
+							_this.addressVisible = false
+							setTimeout(() => {
+								_this.$toast({
+									message: "" + res.data.msg + "!",
+									duration: 1000
+								});
+							}, 500)
+						}, 500)
+					}
+				}).catch((error) => {
+					console.log(error)
+					setTimeout(() => {
+						// this.loading = false;
+						loading.close();
+						_this.addressVisible = false
+						setTimeout(() => {
+							_this.$toast({
+								message: "请求失败!",
+								duration: 1000
+							})
+						}, 500)
+					}, 500)
+				})
+			},
+			toFx() {
 				let _this = this;
 				_this.$router.replace({
 					name: 'analyse'
@@ -407,12 +486,12 @@
 								let id = _this.nowDetailId;
 								// this.findDetails(this.nowDetailId)		
 								// this.findList();
-								_this.projectList.forEach((item, index) => {								
-										// item.checked = false;
-										if (item.id == id) {
-											// item.checked = !checked;
-											item.xmimg = _this.initial_sun;											
-										}								
+								_this.projectList.forEach((item, index) => {
+									// item.checked = false;
+									if (item.id == id) {
+										// item.checked = !checked;
+										item.xmimg = _this.initial_sun;
+									}
 								})
 								_this.imageUrl = _this.initial_sun;
 								_this.now_img = ''
@@ -594,7 +673,7 @@
 										item.xm_url = data.xm_url;
 									}
 								})
-								
+
 								// this.findDetails(this.nowDetailId);
 
 							}, 500)
@@ -692,8 +771,8 @@
 								// _this.isLoading = false;
 								// _this.loading = false;
 								loading.close();
-								
-								
+
+
 								//详情数据开始
 								let isType = this.isType
 								let personType = this.personType
@@ -710,7 +789,7 @@
 											item.isCh = false
 										}
 									})
-								
+
 									//判断是否为产品、测试
 									listItem.ext.forEach((item) => {
 										if (item.design == '产品' || item.design == '测试') {
@@ -719,7 +798,8 @@
 											item.isCS = false
 										}
 									})
-								
+
+
 									listItem.ext.forEach((dataItem) => {
 										let id = 0
 										personList.forEach((item) => {
@@ -733,13 +813,14 @@
 										} else {
 											dataItem.canChange = false
 										}
-										
+
 										//添加是否可改
 										let canChange = listItem.ext.some((dataItem) => {
 											return u_id == dataItem.user_id
 										})
+										console.log(canChange)
 										listItem.canChange = canChange;
-										this.canChange = canChange;	
+										this.canChange = canChange;
 										//详情数据处理
 										listItem.ext.forEach((item) => {
 											if (item.speed == '' || item.speed == null) {
@@ -755,16 +836,88 @@
 												item.speed = parseInt(item.speed)
 											}
 										})
-										
+
 										if (speed == 0 || num == 0) {
 											listItem.mainValue = 0
 										} else {
 											listItem.mainValue = parseInt(speed / num)
 										}
-										
+
 									})
 								})
 								//详情数据结尾
+
+
+								// console.warn(JSON.stringify(_this.daysList), '???2')
+								// console.warn(JSON.stringify(res.data.data), '???1')
+								// // 打卡数据								
+								// res.data.data.forEach((listItem) => {
+								// 	if (listItem.ext.length > 0) {
+								// 		listItem.ext.forEach((extItem) => {
+								// 			let hasCard = false;
+
+								// 			let daysList = _this.daysList;
+								// 			daysList.forEach((dayItem) => {
+								// 				if (extItem.tex.length > 0) {
+								// 					extItem.tex.forEach((item, index) => {
+								// 						console.log(item)
+								// 						item.day = item.punchtime ? item.punchtime.split('-')[2] : '';
+								// 						console.log(dayItem.name, item.day)
+								// 						hasCard = dayItem.name == item.day;
+								// 					})
+								// 				}
+								// 				console.log(hasCard)
+								// 				dayItem.hasCard = hasCard;
+								// 			})
+								// 			console.log(daysList)
+								// 			extItem.daysList = daysList
+
+								// 			// extItem.hasCard = hasCard;  //项目记录当天是否打卡
+								// 			// extItem
+								// 		})
+								// 	}
+								// })
+								//打卡
+								let allData = res.data.data; //总数据
+								let date = this.daysList; // 每阶段天数
+								allData.forEach((allItem, allIndex) => {
+									allItem.ext && allItem.ext.forEach((extItem, extIndex) => {
+										//初始化每一项daysList（必须有值）
+										extItem.daysList = date.map((daysItem, daysIndex) => {
+											return {
+												name: daysItem.name,
+												hasCard: false,
+											}
+										})
+										extItem.hasCard = false;
+										extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
+											let punchtime = texItem.punchtime.split('-');
+											let temp = punchtime[punchtime.length - 1];
+											let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+												if (dateItem.name == temp) {
+													//匹配到了
+													dateItem.hasCard = true
+													return true;
+												} else {
+													//未匹配到
+													dateItem.hasCard = false;
+													return false;
+												}
+											})
+										})
+										for (var i = 0; i < extItem.daysList.length; i++) {
+											if (extItem.daysList[i].hasCard) {
+												if (extItem.daysList[i].name == this.nowDays) {
+													extItem.hasCard = true;
+													break;
+												}
+											}
+										}
+									})
+								})
+								console.log(res.data.data, '??')
+								// 打卡
+
 								if (this.page == 0) {
 									this.projectList = res.data.data
 								} else {
@@ -775,9 +928,9 @@
 										this.isLoading = false;
 									}
 								}
-								
-								
-								
+
+
+
 								_this.finished = true
 								_this.canInit = false
 								_this.projectList = res.data.data
@@ -835,7 +988,7 @@
 								res.data.data.forEach((item) => {
 									item.checked = false;
 								})
-								
+
 								let colorList = this.colorList
 								colorList.forEach((item) => {
 									item.num = 0
@@ -867,9 +1020,9 @@
 								// _this.isLoading = false;
 								// _this.loading = false;
 								loading.close();
-								
-								
-								
+
+
+
 								//详情数据开始
 								let isType = this.isType
 								let personType = this.personType
@@ -886,7 +1039,7 @@
 											item.isCh = false
 										}
 									})
-								
+
 									//判断是否为产品、测试
 									listItem.ext.forEach((item) => {
 										if (item.design == '产品' || item.design == '测试') {
@@ -895,7 +1048,7 @@
 											item.isCS = false
 										}
 									})
-								
+
 									listItem.ext.forEach((dataItem) => {
 										let id = 0
 										personList.forEach((item) => {
@@ -909,13 +1062,13 @@
 										} else {
 											dataItem.canChange = false
 										}
-										
+
 										//添加是否可改
 										let canChange = listItem.ext.some((dataItem) => {
 											return u_id == dataItem.user_id
 										})
 										listItem.canChange = canChange;
-										this.canChange = canChange;	
+										this.canChange = canChange;
 										//详情数据处理
 										listItem.ext.forEach((item) => {
 											if (item.speed == '' || item.speed == null) {
@@ -931,16 +1084,74 @@
 												item.speed = parseInt(item.speed)
 											}
 										})
-										
+
+
+
 										if (speed == 0 || num == 0) {
 											listItem.mainValue = 0
 										} else {
 											listItem.mainValue = parseInt(speed / num)
 										}
-										
+
 									})
 								})
+								// res.data.data.forEach((listItem)=>{
+								// 	if(listItem.ext.length > 0){
+								// 		listItem.ext.forEach((extItem)=>{
+								// 			console.log(extItem.tex)
+								// 			if(extItem.tex.length>0){
+								// 				extItem.tex.forEach((item)=>{
+								// 					if(item.punchtime){
+								// 						extItem.day = item.punchtime.split('-')[2]
+								// 					}													
+								// 				})
+								// 			}
+								// 		})
+								// 	}
+								// })
 								//详情数据结尾
+
+								//打卡
+								let allData = res.data.data; //总数据
+								let date = this.daysList; // 每阶段天数
+								allData.forEach((allItem, allIndex) => {
+									allItem.ext && allItem.ext.forEach((extItem, extIndex) => {
+										//初始化每一项daysList（必须有值）
+										extItem.daysList = date.map((daysItem, daysIndex) => {
+											return {
+												name: daysItem.name,
+												hasCard: false,
+											}
+										})
+										extItem.hasCard = false;
+										extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
+											let punchtime = texItem.punchtime.split('-');
+											let temp = punchtime[punchtime.length - 1];
+											let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+												if (dateItem.name == temp) {
+													//匹配到了
+													dateItem.hasCard = true
+													return true;
+												} else {
+													//未匹配到
+													dateItem.hasCard = false;
+													return false;
+												}
+											})
+										})
+										for (var i = 0; i < extItem.daysList.length; i++) {
+											if(extItem.daysList[i].hasCard){
+												if (extItem.daysList[i].name == this.nowDays) {
+													extItem.hasCard = true;
+													break;
+												}
+											}
+										}
+									})
+								})
+								console.log(res.data.data, '??')
+								// 打卡
+
 								if (this.page == 0) {
 									this.projectList = res.data.data
 								} else {
@@ -951,7 +1162,7 @@
 										this.isLoading = false;
 									}
 								}
-							
+
 								_this.finished = true
 								_this.canInit = false
 								_this.projectList = res.data.data
@@ -1022,31 +1233,31 @@
 				setTimeout(() => {
 					this.finished = false;
 					this.isLoading = false;
-					this.findList()
+					// this.findList()
 				}, 500);
 			},
 			scrollChange() {
 				let Index = document.getElementById('index')
 				Index.scrollIntoView()
 			},
-			projectMonitor(index,projectindex) {
+			projectMonitor(index, projectindex) {
 				let _this = this;
 				_this.canChange = true;
 				// _this.projectList[index].ext[projectindex].hasChange = true;
-				
+
 				// _this.projectList[_this.nowDetailId].ext[projectindex].hasChange = true;
 				// _this.projectDetailsList[projectindex].hasChange = true;
 			},
 			slideChange(projectindex) {
 				let _this = this;
-				
-				_this.projectList.forEach((listItem)=>{
+
+				_this.projectList.forEach((listItem) => {
 					let value = 0,
 						num = 0;
-					listItem.ext.forEach((item)=>{
+					listItem.ext.forEach((item) => {
 						item.hasChange = true;
 					})
-					
+
 					for (const item of listItem.ext) {
 						if (!item.isCS) {
 							value += parseInt(item.speed)
@@ -1057,8 +1268,8 @@
 				})
 				_this.canChange = true;
 				// // _this.projectDetailsList[projectindex].hasChange = true;
-				
-				
+
+
 				// _this.mainValue = 
 			},
 			showPopup(index, id) {
@@ -1095,7 +1306,7 @@
 				this.personInfo.branch = '';
 				this.plotList = [];
 			},
-			deletePerson(id, pid,deleteIndex) {
+			deletePerson(id, pid, deleteIndex) {
 				// this.projectDetailsList =
 				// return;
 				this.$confirm('此操作将永久删除该成员, 是否继续?', '提示', {
@@ -1118,9 +1329,9 @@
 						if (res.data.errcode == 0) {
 							setTimeout(() => {
 								// this.loading = false;
-								
+
 								loading.close();
-								
+
 								setTimeout(() => {
 									this.$toast({
 										message: '删除成功!',
@@ -1128,22 +1339,22 @@
 									});
 									let u_id = this.uid
 									let projectList = this.projectList;
-									projectList.forEach((listItem,listindex)=>{
-										if(listItem.id == this.nowDetailId){	
-											listItem.ext.splice(deleteIndex,1);
+									projectList.forEach((listItem, listindex) => {
+										if (listItem.id == this.nowDetailId) {
+											listItem.ext.splice(deleteIndex, 1);
 											let canChange = listItem.ext.some((dataItem) => {
 												return u_id == dataItem.user_id
 											})
 											listItem.canChange = canChange;
-											this.canChange = canChange;	
-										}										
+											this.canChange = canChange;
+										}
 									})
 									// this.findList();
 									// this.findDetails(pid);
 								}, 500)
 
 							}, 500)
-						}else {
+						} else {
 							setTimeout(() => {
 								// this.loading = false;
 								loading.close();
@@ -1155,7 +1366,7 @@
 									// this.findList();
 									// this.findDetails(pid);
 								}, 500)
-							
+
 							}, 500)
 						}
 					}).catch(() => {
@@ -1201,11 +1412,11 @@
 										duration: 1000
 									});
 									let zdObj = {}
-									this.projectList.forEach((item,index)=>{
-										if(item.id == id){
+									this.projectList.forEach((item, index) => {
+										if (item.id == id) {
 											zdObj = item;
 											item.is_type = 1;
-											this.projectList.splice(index,1)
+											this.projectList.splice(index, 1)
 										}
 									})
 									this.projectList.push(zdObj);
@@ -1270,11 +1481,11 @@
 										duration: 1000
 									});
 									let zdObj = {}
-									this.projectList.forEach((item,index)=>{
-										if(item.id == id){
+									this.projectList.forEach((item, index) => {
+										if (item.id == id) {
 											zdObj = item;
 											item.is_type = 2;
-											this.projectList.splice(index,1)
+											this.projectList.splice(index, 1)
 										}
 									})
 									this.projectList.unshift(zdObj);
@@ -1358,7 +1569,7 @@
 							loading.close();
 							setTimeout(() => {
 								let data = {
-									
+
 								}
 								// _this.projectList.forEach((item) => {
 								// 	if (item.hasChange) {
@@ -1475,15 +1686,15 @@
 				}).then(() => {
 					let data = []
 					let projectListNow = _this.projectList[index]
-					_this.projectList.forEach((listItem)=>{
-						if(listItem.id == _this.nowDetailId){						
-							listItem.ext.forEach((item)=>{								
+					_this.projectList.forEach((listItem) => {
+						if (listItem.id == _this.nowDetailId) {
+							listItem.ext.forEach((item) => {
 								if (item.canChange) {
-									if(data.length == 0){
+									if (data.length == 0) {
 										let obj = {}
 										obj.creat_time = _this.Change((new Date()))
 										obj.log_id = item.log_id;
-										obj.xmlog_id = projectListNow.id 
+										obj.xmlog_id = projectListNow.id
 										obj.centen_log = item.centen_log ? item.centen_log : ''
 										obj.speed = parseInt(item.speed) ? parseInt(item.speed) : 0
 										obj.count_speed = listItem.mainValue;
@@ -1492,7 +1703,7 @@
 								}
 							})
 						}
-					})	
+					})
 					console.log(data)
 					_this.update(data, id)
 				}).catch(() => {
@@ -1516,107 +1727,38 @@
 						if (res.data.data) {
 							let speed = 0;
 							let num = 0;
-							// _this.address = res.data.data.xm_url
-							// res.data.data.forEach((item) => {
-							// 	if (item.design == '产品') {
-							// 		item.isCh = true
-							// 	} else {
-							// 		item.isCh = false
-							// 	}
-							// 	item.hasChange = false;
-							// })
-							// res.data.data.forEach((item) => {
-							// 	if (item.design == '产品' || item.design == '测试') {
-							// 		item.isCS = true
-							// 	} else {
-							// 		item.isCS = false
-							// 	}
-							// })
-							// let personList = this.personList
-							// let u_id = this.uid
-							// res.data.data.forEach((dataItem) => {
-							// 	let id = 0
-							// 	personList.forEach((item) => {
-							// 		if (item.user_name == dataItem.zx_name) {
-							// 			id = item.id
-							// 			dataItem.user_id = item.id
-							// 		}
-							// 	})
-							// 	if (u_id == id) {
-							// 		dataItem.canChange = true
-							// 	} else {
-							// 		dataItem.canChange = false
-							// 	}
-							// })
-							// let canChange = res.data.data.some((dataItem) => {
-							// 	return u_id == dataItem.user_id
-							// })
-							// this.canChange = canChange
-							// res.data.data.forEach((dataItem) => {
-							// 	if (dataItem.detail == '' || dataItem.detail == null) {
-							// 		let data = {
-							// 			centen_log: '',
-							// 			count_speed: 0,
-							// 			creat_time: this.Change(new Date())
-							// 		}
-							// 		dataItem.detail = data
-							// 	}
-							// })
-							// res.data.data.forEach((item) => {
-							// 	if (item.detail.speed == '' || item.detail.speed == null) {
-							// 		item.detail.speed = 0;
-							// 		if (item.design != '产品' && item.design != '测试') {
-							// 			num++;
-							// 		}
-							// 	} else {
-							// 		if (!item.isCS) {
-							// 			speed += parseInt(item.detail.speed)
-							// 			num++;
-							// 		}
-							// 		item.speed = parseInt(item.detail.speed)
-							// 	}
-							// })
-							// debugger;
 							_this.projectDetailsList = res.data.data
 							// this.oldDetailsList = res.data.data
-								
+
 							let dataArr = []
 							let projectListNow = _this.projectList[_this.nowprojectIndex];
-							
+
 							let data = {};
 							let project = _this.projectDetailsList[_this.projectDetailsList.length - 1]
 							let newObj = {};
 							let subData = '';
-							
-							
-								
 							newObj.creat_time = _this.Change((new Date()));
 							newObj.log_id = project.id;
 							newObj.xmlog_id = project.xm_id;
 							newObj.centen_log = '';
 							newObj.speed = 0;
 							newObj.count_speed = 0;
-
-
-							
 							dataArr.push(newObj);
-
-							let newData = Object.assign({}, newObj);
+							let newData = Object.assign({}, newObj);
 							let user_id = ''
-							this.personList.forEach((item)=>{
-								if(project.zx_name == item.username){
+							this.personList.forEach((item) => {
+								if (project.zx_name == item.username) {
 									user_id = item.id;
 								}
 							})
-							newData.zx_name = project.zx_name;	
+							newData.zx_name = project.zx_name;
 							newData.zx_type = project.zx_type;
 							newData.design = project.design;
 							newData.id = project.id;
 							newData.xm_id = project.xm_id;
 							newData.user_id = user_id;
-							
 							// return;
-							this.addUpdate(newData,dataArr,this.nowDetailId)
+							this.addUpdate(newData, dataArr, this.nowDetailId)
 						}
 					} else {
 						this.projectDetailsList = [];
@@ -1626,7 +1768,7 @@
 
 				})
 			},
-			addUpdate(newData,data,id){
+			addUpdate(newData, data, id) {
 				let _this = this;
 				// _this.loading = true;
 				const loading = this.openLoading();
@@ -1647,10 +1789,10 @@
 							});
 							loading.close();
 							let u_id = this.uid
-							this.projectList.forEach((listItem)=>{
+							this.projectList.forEach((listItem) => {
 								let speed = 0;
 								let num = 0;
-								if(listItem.id == this.nowDetailId){
+								if (listItem.id == this.nowDetailId) {
 									listItem.ext.push(newData);
 									listItem.ext.forEach((dataItem) => {
 										let id = 0
@@ -1665,13 +1807,13 @@
 										} else {
 											dataItem.canChange = false
 										}
-										
+
 										//添加是否可改
 										let canChange = listItem.ext.some((dataItem) => {
 											return u_id == dataItem.user_id
 										})
 										listItem.canChange = canChange;
-										this.canChange = canChange;	
+										this.canChange = canChange;
 										//详情数据处理
 										listItem.ext.forEach((item) => {
 											if (item.speed == '' || item.speed == null) {
@@ -1687,26 +1829,77 @@
 												item.speed = parseInt(item.speed)
 											}
 										})
-										
+
 										if (speed == 0 || num == 0) {
 											listItem.mainValue = 0
 										} else {
 											listItem.mainValue = parseInt(speed / num)
 										}
-										
+
 									})
-								}							
+								}
 							})
+
+							//打卡
+							let allData = this.projectList; //总数据
+							let date = this.daysList; // 每阶段天数
+							allData.forEach((allItem, allIndex) => {
+								allItem.ext && allItem.ext.forEach((extItem, extIndex) => {
+									//初始化每一项daysList（必须有值）
+									extItem.daysList = date.map((daysItem, daysIndex) => {
+										return {
+											name: daysItem.name,
+											hasCard: false,
+										}
+									})
+									extItem.hasCard = false;
+									if(this.log_id == extItem.log_id){									
+										extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
+											let punchtime = texItem.punchtime.split('-');
+											let temp = punchtime[punchtime.length - 1];
+											let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+												if (extItem.daysList[i].name == this.nowDays) {
+													if (dateItem.name == temp) {
+														//匹配到了
+														dateItem.hasCard = true
+														return true;
+													} else {
+														//未匹配到
+														dateItem.hasCard = false;
+														return false;
+													}
+												}else {
+													//未匹配到
+													dateItem.hasCard = false;
+													return false;
+												}
+											})
+										})
+										for (var i = 0; i < extItem.daysList.length; i++) {
+											console.log(extItem.daysList[i].name, this.nowDays)
+											if (extItem.daysList[i].hasCard) {
+												if (extItem.daysList[i].name == this.nowDays) {
+													extItem.hasCard = true;
+													break;
+												}
+											}
+										}
+									}
+								})
+							})
+							// console.log(res.data.data, '??')
+							this.projectList = allData
+							// 打卡
 							// this.findList();
 						}, 500)
-					}else {
+					} else {
 						loading.close();
 						_this.$toast({
 							message: res.data.msg,
 							duration: 1000
 						});
 					}
-				}).catch(()=>{
+				}).catch(() => {
 					loading.close();
 					_this.$toast({
 						message: '请求失败!',
@@ -1734,7 +1927,7 @@
 								_this.$toast({
 									message: '更新成功!',
 									duration: 1000
-								});							
+								});
 								// this.findList();
 								// this.findDetails(id)
 							}, 500)
@@ -1828,8 +2021,8 @@
 								item.overTime = false
 							}
 						})
-						
-						
+
+
 						//详情数据开始
 						let isType = this.isType
 						let personType = this.personType
@@ -1846,7 +2039,7 @@
 									item.isCh = false
 								}
 							})
-						
+
 							//判断是否为产品、测试
 							listItem.ext.forEach((item) => {
 								if (item.design == '产品' || item.design == '测试') {
@@ -1855,7 +2048,7 @@
 									item.isCS = false
 								}
 							})
-						
+
 							listItem.ext.forEach((dataItem) => {
 								let id = 0
 								personList.forEach((item) => {
@@ -1869,13 +2062,13 @@
 								} else {
 									dataItem.canChange = false
 								}
-						
+
 								//添加是否可改
 								let canChange = listItem.ext.some((dataItem) => {
 									return u_id == dataItem.user_id
 								})
 								listItem.canChange = canChange;
-								this.canChange = canChange;	
+								this.canChange = canChange;
 								//详情数据处理
 								listItem.ext.forEach((item) => {
 									if (item.speed == '' || item.speed == null) {
@@ -1891,13 +2084,13 @@
 										item.speed = parseInt(item.speed)
 									}
 								})
-								
+
 								if (speed == 0 || num == 0) {
 									listItem.mainValue = 0
 								} else {
 									listItem.mainValue = parseInt(speed / num)
 								}
-								
+
 							})
 						})
 						//详情数据结尾
@@ -1911,8 +2104,8 @@
 								this.isLoading = false;
 							}
 						}
-						
-						
+
+
 						// _this.projectList = res.data.data
 					}
 				}).catch(() => {
@@ -1991,7 +2184,7 @@
 										item.isCS = false
 									}
 								})
-								
+
 								listItem.ext.forEach((dataItem) => {
 									let id = 0
 									personList.forEach((item) => {
@@ -2011,7 +2204,7 @@
 										return u_id == dataItem.user_id
 									})
 									listItem.canChange = canChange;
-									this.canChange = canChange;	
+									this.canChange = canChange;
 									//详情数据处理
 									listItem.ext.forEach((item) => {
 										if (item.speed == '' || item.speed == null) {
@@ -2027,16 +2220,60 @@
 											item.speed = parseInt(item.speed)
 										}
 									})
-									
+
 									if (speed == 0 || num == 0) {
 										listItem.mainValue = 0
 									} else {
 										listItem.mainValue = parseInt(speed / num)
 									}
-									
+
 								})
 							})
 							//详情数据结尾
+
+							//打卡
+							let allData = res.data.data; //总数据
+							let date = this.daysList; // 每阶段天数
+							allData.forEach((allItem, allIndex) => {
+								allItem.ext && allItem.ext.forEach((extItem, extIndex) => {
+									//初始化每一项daysList（必须有值）
+									extItem.daysList = date.map((daysItem, daysIndex) => {
+										return {
+											name: daysItem.name,
+											hasCard: false,
+										}
+									})
+									extItem.hasCard = false;
+									extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
+										let punchtime = texItem.punchtime.split('-');
+										let temp = punchtime[punchtime.length - 1];
+										let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+											if (dateItem.name == temp) {
+												//匹配到了
+												dateItem.hasCard = true
+												return true;
+											} else {
+												//未匹配到
+												dateItem.hasCard = false;
+												return false;
+											}
+										})
+									})
+									
+									for (var i = 0; i < extItem.daysList.length; i++) {
+										if(extItem.daysList[i].hasCard){
+											if (extItem.daysList[i].name == this.nowDays) {
+												extItem.hasCard = true;
+												break;
+											}
+										}
+									}
+								})
+							})
+							console.log(res.data.data, '??')
+							// 打卡
+
+
 							if (this.page == 0) {
 								this.projectList = res.data.data
 							} else {
@@ -2055,8 +2292,8 @@
 						this.finished = true;
 						this.canInit = false;
 					}
-				}).catch(() => {
-
+				}).catch((reason) => {
+					console.warn('1111', reason)
 				})
 			},
 			findDetails(id) {
@@ -2193,10 +2430,50 @@
 					c += String.fromCharCode(code.charCodeAt(i) - c.charCodeAt(i - 1));
 				}
 				return c;
+			},
+			getDays() {
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var d = new Date(year, month, 0);
+				return d.getDate();
 			}
 		},
+
 		created() {
 			let _this = this;
+
+			var nowDay = new Date().getDate();
+			// var nowDay = '18'
+			let daysIndex = new Date().getDate() % 10 == 0 ? parseInt(new Date().getDate() / 10) : parseInt(new Date().getDate() /
+				10) + 1;
+			// let daysIndex = 3;
+			let days = _this.getDays();
+			let daysList = [];
+			for (var i = 1; i <= days; i++) {
+				if (daysIndex == 1) {
+					if (i <= 10) {
+						daysList.push({
+							name: i
+						});
+					}
+				} else if (daysIndex == 2) {
+					if (i > 10 && i <= 20) {
+						daysList.push({
+							name: i
+						});
+					}
+				} else if (daysIndex == 3) {
+					if (i > 20) {
+						daysList.push({
+							name: i
+						});
+					}
+				}
+			}
+			_this.nowDays = nowDay;
+			_this.daysList = daysList;
+			// let dayList = dayLength
 			let role = localStorage.getItem('role')
 			// _this.loading = true;
 			const loading = this.openLoading();
@@ -2301,7 +2578,7 @@
 	}
 
 	.add-submit {
-		font-size: 16px;
+		font-size: 14px;
 		letter-spacing: 1px;
 		width: 100%;
 		border-radius: 5px;
@@ -2423,7 +2700,7 @@
 	/**/
 	.type-info-name>span:nth-child(1) {
 		color: #000;
-		font-size: 17px;
+		font-size: 15px;
 	}
 
 	.type-info-name>span:nth-child(2) {
@@ -2438,11 +2715,12 @@
 
 	.type-info-time {
 		color: #b1b1b1;
-		font-size: 14px;
+		font-size: 13px;
 	}
 
 	.type-wrapper-container {
 		display: flex;
+		flex-direction: column;
 		padding: 0px 5px 20px;
 		position: relative;
 	}
@@ -2453,18 +2731,37 @@
 		padding-top: 0;
 	}
 
-	.type-wrapper-container>div:nth-child(1) {
+	.container_center {
+		width: 100%;
+		display: flex;
+	}
+
+	.container_center>div:nth-child(1) {
 		width: 30%;
 	}
 
-	.type-wrapper-container>div:nth-child(2) {
+	.container_center>div:nth-child(2) {
 		width: 40%;
 		margin-right: 10px;
 	}
 
-	.type-wrapper-container>div:nth-child(3) {
+	.container_center>div:nth-child(3) {
 		width: 30%;
 	}
+
+
+	// .type-wrapper-container>div:nth-child(1) {
+	// 	width: 30%;
+	// }
+
+	// .type-wrapper-container>div:nth-child(2) {
+	// 	width: 40%;
+	// 	margin-right: 10px;
+	// }
+
+	// .type-wrapper-container>div:nth-child(3) {
+	// 	width: 30%;
+	// }
 
 	.type-info-details {
 		font-size: 12px;
@@ -2584,6 +2881,13 @@
 		line-height: 29px;
 	}
 
+	.add_card {
+		padding: 0 10px;
+		height: 25px;
+		line-height: 24px;
+		font-size:12px;
+	}
+
 	.van-slider--disabled {
 		opacity: 1;
 	}
@@ -2680,7 +2984,7 @@
 		border-radius: 5px;
 		color: #fff;
 		cursor: pointer;
-		font-size: 12px;
+		// font-size: 12px;
 	}
 
 	.price_num {
@@ -2792,6 +3096,32 @@
 	.van-list {
 		padding-bottom: 40px;
 		min-height: 65vh;
+	}
+
+	.data_center {
+		margin: 10px 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	table tr td {
+		padding: 3px;
+		border: 1px solid #eee;
+		position: relative;
+		font-size:12px;
+	}
+
+	.data_select {
+		position: absolute;
+		left: 50%;
+		bottom: 0px;
+		transform: translateX(-50%);
+		color: #fff;
+	}
+
+	.data_active {
+		background: rgba(64, 158, 225, 0.5);
 	}
 </style>
 <style>

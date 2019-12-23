@@ -29,7 +29,7 @@
 		<!-- built files will be auto injected -->
 	</body>
 	<script src="https://cdn.bootcss.com/zepto/1.1.7/zepto.min.js"></script>
-	<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js "></script>
+<!-- 	<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js "></script>
 	<script>
 		var baseUrl = document.location.protocol == 'https' ? "https://game.flyh5.cn" : "http://game.flyh5.cn";
 		// var href = window.location.href.replace(/#.*/, '');
@@ -44,6 +44,7 @@
 			async : false,
 			success: function(resC) {
 				let result = JSON.parse(resC.split('wx_config=')[1])
+				console.log(result)
 				wx.config({
 					// debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 					appId: result.appId, // 必填，公众号的唯一标识
@@ -73,5 +74,5 @@
 				// console.log(err);
 			}
 		})
-	</script>
+	</script> -->
 </html>

@@ -11,10 +11,14 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import 'vue-beauty/package/style/vue-beauty.min.css'
 import 'lib-flexible/flexible.js'
-import '@/common/ChinesePY.js'
+// import '@/common/ChinesePY.js'
 import axios from 'axios'
 import FastClick from 'fastclick'
 import crypto from 'crypto'
+import VueClipboard from 'vue-clipboard2'
+import 'common/wxConfig.js'
+VueClipboard.config.autoSetContainer = true;
+Vue.use(VueClipboard)
 import {
 	Loading
 } from "element-ui";

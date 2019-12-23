@@ -43,8 +43,8 @@
 				</div>
 			</div>
 			<div class="statistics">
-				<el-button type='primary' plain class="output" @click.native="toAl()">案例分析</el-button>
-				<el-button type='primary' plain class="output" @click.native="toFx()">项目分析</el-button>
+				<el-button type='primary' plain class="output" @click.native="toAl()">行业分析</el-button>
+				<el-button type='primary' plain class="output" @click.native="toFx()">案例大全</el-button>
 			</div>
 
 			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
@@ -94,48 +94,56 @@
 								<div class="schedule" @click.stop="showMoney(projectItem.id,projectItem.finance,projectItem.sale_name)">财务进度</div>
 								<div class="schedule" @click.stop="toSchedule(projectItem.id)">查看排期</div>
 							</div>
-
 						</div>
 						<div :class="{'type-wrapper':true,'showframe':projectItem.checked}" v-show="projectItem.checked">
 							<div class="type-wrapper-list-details">
-								<div class="type-wrapper-container" v-if="projectDetailsList !=''">
-									<div class="type" v-for="(projectDetailsItem,projectDetailsIndex) in projectDetailsList" :key="projectDetailsIndex">
-										<div>
-											<span v-html='projectDetailsItem.design + ":"'></span><span v-html="projectDetailsItem.zx_name"></span>
-											<div class="type-time" v-show="!projectDetailsItem.isCS">
-												<span v-html="projectDetailsItem.creat_time"></span><br>
-												<span v-html="projectDetailsItem.speed + '%'"></span>
+								<div class="container_center">
+									<div class="type-wrapper-container" v-if="projectDetailsList !=''">
+										<div class="type" v-for="(projectDetailsItem,projectDetailsIndex) in projectDetailsList" :key="projectDetailsIndex">
+											<div>
+												<span v-html='projectDetailsItem.design + ":"'></span><span v-html="projectDetailsItem.zx_name"></span>
+												<div class="type-time" v-show="!projectDetailsItem.isCS">
+													<span v-html="projectDetailsItem.creat_time"></span><br>
+													<span v-html="projectDetailsItem.speed + '%'"></span>
+												</div>
+											</div>
+											<div class="info" v-show="!projectDetailsItem.isCS">
+												<span v-html="projectDetailsItem.centen_log"></span>
+											</div>	
+										</div>
+										
+									</div>
+									<div class="rate-container" v-if="projectDetailsList !=''">
+										<div class="rate" v-if="projectDetailsList !=''">
+											<!--                                <div v-for="(projectDetailsItem,projectDetailsIndex) in projectDetailsList" :key="projectDetailsIndex" v-show="!projectDetailsItem.isCS">-->
+											<!--                                    <el-progress type="circle" :percentage="parseInt(projectDetailsItem.speed)" :color="rateColor[projectDetailsIndex]" :stroke-width="10"></el-progress>-->
+											<!--                                    <div class="type-kind"><span v-html="projectDetailsItem.design"></span></div>-->
+											<!--                                </div>-->
+											<div v-show="sjProject.num != 0">
+												<el-progress type="circle" :percentage="parseInt(sjProject.score)" :color="rateColor[0]" :stroke-width="10"></el-progress>
+												<div class="type-kind"><span>设计</span></div>
+											</div>
+											<div v-show="qdProject.num != 0">
+												<el-progress type="circle" :percentage="parseInt(qdProject.score)" :color="rateColor[1]" :stroke-width="10"></el-progress>
+												<div class="type-kind"><span></span>前端</div>
+											</div>
+											<div v-show="hdProject.num != 0">
+												<el-progress type="circle" :percentage="parseInt(hdProject.score)" :color="rateColor[2]" :stroke-width="10"></el-progress>
+												<div class="type-kind"><span>后端</span></div>
 											</div>
 										</div>
-										<div class="info" v-show="!projectDetailsItem.isCS">
-											<span v-html="projectDetailsItem.centen_log"></span>
+										<div class="rate-info" v-if="projectDetailsList !=''">
+											<div class="rate-val"><span>总进度:</span><span v-text='mainValue +"%"'></span></div>
+											<van-button type="info" @click.native="showfinishModal(projectItem.id,projectItem.user_id)" v-if="mainValue == 100">完成</van-button>
+											<!-- <van-button type="info" @click.native="showfinishModal(projectItem.id,projectItem.user_id)">完成</van-button> -->
 										</div>
 									</div>
+
 								</div>
-								<div class="rate-container" v-if="projectDetailsList !=''">
-									<div class="rate" v-if="projectDetailsList !=''">
-										<!--                                <div v-for="(projectDetailsItem,projectDetailsIndex) in projectDetailsList" :key="projectDetailsIndex" v-show="!projectDetailsItem.isCS">-->
-										<!--                                    <el-progress type="circle" :percentage="parseInt(projectDetailsItem.speed)" :color="rateColor[projectDetailsIndex]" :stroke-width="10"></el-progress>-->
-										<!--                                    <div class="type-kind"><span v-html="projectDetailsItem.design"></span></div>-->
-										<!--                                </div>-->
-										<div v-show="sjProject.num != 0">
-											<el-progress type="circle" :percentage="parseInt(sjProject.score)" :color="rateColor[0]" :stroke-width="10"></el-progress>
-											<div class="type-kind"><span>设计</span></div>
-										</div>
-										<div v-show="qdProject.num != 0">
-											<el-progress type="circle" :percentage="parseInt(qdProject.score)" :color="rateColor[1]" :stroke-width="10"></el-progress>
-											<div class="type-kind"><span></span>前端</div>
-										</div>
-										<div v-show="hdProject.num != 0">
-											<el-progress type="circle" :percentage="parseInt(hdProject.score)" :color="rateColor[2]" :stroke-width="10"></el-progress>
-											<div class="type-kind"><span>后端</span></div>
-										</div>
-									</div>
-									<div class="rate-info" v-if="projectDetailsList !=''">
-										<div class="rate-val"><span>总进度:</span><span v-text='mainValue +"%"'></span></div>
-										<van-button type="info" @click.native="showfinishModal(projectItem.id,projectItem.user_id)" v-if="mainValue == 100">完成</van-button>
-									</div>
-								</div>
+
+
+
+
 							</div>
 						</div>
 					</div>
@@ -146,7 +154,7 @@
 		<div class="submit-box">
 			<el-button type="primary" class="add-submit" @click.native="showPopup">增加项目</el-button>
 		</div>
-		
+
 		<el-dialog :visible.sync="finishModalShow" :append-to-body='true' class='finish_modal'>
 			<el-form ref="form" label-width="80px">
 				<div class='person_info' v-for="(projectDetailsItem,projectDetailsIndex) in projectDetailsList" :key="projectDetailsIndex">
@@ -154,32 +162,33 @@
 						<div>{{projectDetailsItem.zx_name}}：</div>
 						<!-- <div class='name_score'><van-field type='tel' v-model="projectDetailsItem.getscore" placeholder="得分" maxlength='5' /></div> -->
 					</div>
-					<div class='worker_assess'>
+					<!-- 				<div class='worker_assess'>
 						<label for="">工作占比</label>
 						<van-dropdown-menu class="van_select">
 						  <van-dropdown-item ref="item" v-model="projectDetailsItem.score_value" :options="projectScore.score.list" />
 						</van-dropdown-menu>
-					</div>
+					</div> -->
 					<div class='kh_assess'>
 						<label for="">客户满意度评价</label>
 						<van-dropdown-menu class="van_select">
-						  <van-dropdown-item ref="item" v-model="projectDetailsItem.kh_value" :options="projectScore.kh.list" />
+							<van-dropdown-item ref="item" v-model="projectDetailsItem.kh_value" :options="projectScore.kh.list" />
 						</van-dropdown-menu>
-					</div>	
+					</div>
 				</div>
 				<div>
-				<div class='pro_deliver'>项目总评:</div>
-				<el-input @click.native="inputClick($event)" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="详细描述问题..." v-model="projectFinish.info_details"
-				 @blur="scrollChange">
-				</el-input></div>
+					<div class='pro_deliver'>项目总评:</div>
+					<el-input @click.native="inputClick($event)" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="详细描述问题..."
+					 v-model="projectFinish.info_details" @blur="scrollChange">
+					</el-input>
+				</div>
 				<el-form-item class='primary_box'>
 					<el-button type="primary" @click.native="scoreSubmit">提交</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
-		
-		
-		
+
+
+
 		<el-dialog :visible.sync="dialogFormVisible" :append-to-body='true'>
 			<el-form ref="form" label-width="80px">
 				<el-form-item label="项目名">
@@ -223,8 +232,8 @@
 		<el-dialog :visible.sync="moneyVisible" :append-to-body='true'>
 			<el-form ref="form" label-width="80px">
 				<el-form-item label="财务进度">
-					<el-input @click.native="inputClick($event)" v-model.number="finance" maxlength='3' min='0' max='100' @keyup.native="loadNumber($event)" placeholder="财务进度"
-					 type="text">
+					<el-input @click.native="inputClick($event)" v-model.number="finance" maxlength='3' min='0' max='100'
+					 @keyup.native="loadNumber($event)" placeholder="财务进度" type="text">
 
 					</el-input>
 				</el-form-item>
@@ -248,7 +257,7 @@
 		name: "commercial",
 		data() {
 			return {
-				workerList : [],
+				workerList: [],
 				showSubmit: false,
 				nowXms_id: '',
 				moneyVisible: false,
@@ -256,7 +265,7 @@
 				typeList: ['行政', '商务', '执行'],
 				search: '',
 				p_search: '',
-				color1 : '#45e5d9',
+				color1: '#45e5d9',
 				colorList: [{
 					color: 'green',
 					num: 0,
@@ -264,31 +273,27 @@
 						title: '0-3W'
 					}, {
 						title: '0-5W'
-					}	
-					]
+					}]
 				}, {
 					color: '#45e5d9',
 					num: 0,
-					priceList: [
-					{
+					priceList: [{
 						title: '3-5W'
 					}]
-				},{
+				}, {
 					color: 'blue',
 					num: 0,
-					priceList: [
-						{
-							title: '5-10W'
-						},{
+					priceList: [{
+						title: '5-10W'
+					}, {
 						title: '3-8W'
 					}, ]
 				}, {
 					color: 'orange',
 					num: 0,
-					priceList: [
-						 {
-							title: '10-15W'
-						},{
+					priceList: [{
+						title: '10-15W'
+					}, {
 						title: '8-15W'
 					}]
 				}, {
@@ -302,7 +307,7 @@
 				show: false,
 				SellerList: [],
 				PlanList: [],
-				MoneyList: ['0-3W','3-5W', '5-10W', '10-15W', '15W以上'],
+				MoneyList: ['0-3W', '3-5W', '5-10W', '10-15W', '15W以上'],
 				projectInfo: {
 					name: '',
 					lxtime: new Date(),
@@ -311,29 +316,29 @@
 					plot: '',
 					money: ''
 				},
-				projectScore : {
-					getscore : '',
-					score : {
-						value : 0,
-						list : []
+				projectScore: {
+					getscore: '',
+					score: {
+						value: 0,
+						list: []
 					},
-					kh : {
-						value : '特别优秀,受到客户的认可',
-						list : [{
-							text : '特别优秀,受到客户的认可',
-							value : '特别优秀,受到客户的认可'
-						},{
-							text : '无工作纰漏,工作效率和配合度良好',
-							value : '无工作纰漏,工作效率和配合度良好'
-						},{
-							text : '有工作纰漏,或工作效率和态度不佳',
-							value : '有工作纰漏,或工作效率和态度不佳'
-						},{
-							text : '重大纰漏,受到客户不满和投诉',
-							value : '重大纰漏,受到客户不满和投诉'
-						},{
-							text : '项目黄单,尾款无法收回',
-							value : '项目黄单,尾款无法收回'
+					kh: {
+						value: '特别优秀,受到客户的认可',
+						list: [{
+							text: '特别优秀,受到客户的认可',
+							value: '特别优秀,受到客户的认可'
+						}, {
+							text: '无工作纰漏,工作效率和配合度良好',
+							value: '无工作纰漏,工作效率和配合度良好'
+						}, {
+							text: '有工作纰漏,或工作效率和态度不佳',
+							value: '有工作纰漏,或工作效率和态度不佳'
+						}, {
+							text: '重大纰漏,受到客户不满和投诉',
+							value: '重大纰漏,受到客户不满和投诉'
+						}, {
+							text: '项目黄单,尾款无法收回',
+							value: '项目黄单,尾款无法收回'
 						}]
 					}
 				},
@@ -429,15 +434,23 @@
 					}
 				},
 				dataNum: 0,
-				workList : [
-				        { text: '全部商品', value: 0 },
-				        { text: '新款商品', value: 1 },
-				        { text: '活动商品', value: 2 }
-				      ]
+				workList: [{
+						text: '全部商品',
+						value: 0
+					},
+					{
+						text: '新款商品',
+						value: 1
+					},
+					{
+						text: '活动商品',
+						value: 2
+					}
+				]
 			}
 		},
 		components: {
-			Footer : () => import('components/footer.vue'),
+			Footer: () => import('components/footer.vue'),
 		},
 		computed: {
 			text(Rate) {
@@ -450,7 +463,7 @@
 					let color = ''
 					if (money == '0-3W' || money == '0-5W') {
 						color = 'green'
-					}else if (money == '3-5W') {
+					} else if (money == '3-5W') {
 						color = '#45e5d9'
 					} else if (money == '3-8W' || money == '5-10W') {
 						color = 'blue'
@@ -475,8 +488,8 @@
 			}
 		},
 		mounted() {
-			
-			
+
+
 			let type = localStorage.getItem('type');
 			setTimeout(() => {
 				if (type == 1) {
@@ -497,16 +510,16 @@
 			}, 1500)
 		},
 		methods: {
-			toAnalyse(){
-				
+			toAnalyse() {
+
 			},
-			toAl(){
+			toAl() {
 				let _this = this;
 				_this.$router.replace({
 					name: 'case'
 				})
 			},
-			toFx(){
+			toFx() {
 				let _this = this;
 				_this.$router.replace({
 					name: 'analyse'
@@ -711,7 +724,7 @@
 						})
 					}
 				}).catch(() => {
-					
+
 				})
 			},
 			Search() {
@@ -863,7 +876,7 @@
 				this.projectFinish.info_details = '';
 				this.finishModalShow = true;
 			},
-			
+
 			scoreSubmit() {
 				let _this = this;
 				let data = [];
@@ -878,10 +891,10 @@
 					obj.m_center = _this.projectFinish.info_details;
 					obj.creat_time = _this.Change(new Date());
 					obj.sorce = 10;
-					obj.Job_share = item.score_value * 5 + '%';
+					obj.Job_share = item.score_value * 5 + '%' ? item.score_value * 5 + '%' : 0 + '%';
 					obj.customer = item.kh_value;
 					data.push(obj)
-				})	
+				})
 				const loading = this.openLoading();
 				_this.$axios({
 					url: '/getScore',
@@ -1135,16 +1148,7 @@
 								})
 							})
 							this.colorList = colorList
-							if (this.page == 0) {
-								this.projectList = res.data.data
-							} else {
-								res.data.data.forEach((item) => {
-									this.projectList.push(item)
-								})
-								if (res.data.data.length < 8) {
-									this.isLoading = false;
-								}
-							}
+
 
 							res.data.data.forEach((item) => {
 								let sjList = [],
@@ -1237,6 +1241,19 @@
 							})
 
 
+							console.log(res.data.data, '??')
+
+							if (this.page == 0) {
+								this.projectList = res.data.data
+							} else {
+								res.data.data.forEach((item) => {
+									this.projectList.push(item)
+								})
+								if (res.data.data.length < 8) {
+									this.isLoading = false;
+								}
+							}
+
 						} else {
 							this.finished = true;
 							this.canInit = false;
@@ -1245,8 +1262,8 @@
 						this.finished = true;
 						this.canInit = false;
 					}
-				}).catch(() => {
-
+				}).catch((error) => {
+					console.log(error)
 				})
 			},
 			findDetails(id) {
@@ -1334,19 +1351,19 @@
 							this.qdProject.num = qdnum;
 							this.sjProject.num = sjnum;
 							this.hdProject.num = hdnum;
-									
+
 							if (num1 + num2 + num3 == 0) {
 								this.mainValue = 0
 							} else {
 								this.mainValue = parseInt((this.hdProject.score + this.qdProject.score + this.sjProject.score) / (num1 + num2 +
 									num3))
 							}
-							res.data.data.forEach((item)=>{
+							res.data.data.forEach((item) => {
 								item.worker = '';
 								item.getscore = '';
 								item.score_value = 0;
 								item.kh_value = '特别优秀,受到客户的认可';
-							})	
+							})
 							// console.log(item)
 							this.projectDetailsList = res.data.data
 							console.log(res.data.data)
@@ -1512,23 +1529,30 @@
 								this.PlanList.push(item.user_name)
 							}
 						})
-											
+
 						let list = [];
-						for(let i = 0;i<=20;i++){
-								let obj = {};
-								obj.text = i*5;
-								obj.value = i;
-								list.push(obj)
-						}		
-								
+						for (let i = 0; i <= 20; i++) {
+							let obj = {};
+							obj.text = i * 5;
+							obj.value = i;
+							list.push(obj)
+						}
+
 						this.projectScore.score.list = list;
-						
+
 						this.PlanList.unshift('无')
 						this.personList = res.data.data
 					}
 				}).catch(() => {
 
 				})
+			},
+			getDays() {
+				var date = new Date();
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var d = new Date(year, month, 0);
+				return d.getDate();
 			},
 			uncompileStr(code) {
 				code = unescape(code);
@@ -1567,7 +1591,7 @@
 			let role = localStorage.getItem('role');
 			// this.loading = true;
 			const loading = this.openLoading();
-				
+
 			this.findPerson();
 			// this.loading = false;
 			loading.close();
@@ -1663,13 +1687,13 @@
 		position: fixed;
 		bottom: 0px;
 		width: 100%;
-		padding: 10px 25px 30px;
+		padding: 10px 25px 25px;
 		background-color: #f5f5f5;
 		box-sizing: border-box;
 	}
 
 	.add-submit {
-		font-size: 16px;
+		font-size: 14px;
 		letter-spacing: 1px;
 		width: 100%;
 		border-radius: 5px;
@@ -1901,13 +1925,48 @@
 	.price_num {
 		font-size: 12px;
 	}
+
 	.score {
 		max-width: 50%;
 	}
+
 	.el-form-item__label {
 		white-space: nowrap;
 	}
+
 	.finish_modal .el-dialog__body {
-		padding : 0 5px 0;
-		}
+		padding: 0 5px 0;
+	}
+	// .data_center {
+	// 	margin: 10px 0;
+	// 	display: flex;
+	// 	justify-content: space-between;
+	// 	align-items: center;
+	// }
+	
+	// table tr td {
+	// 	padding: 6px;
+	// 	border: 1px solid #eee;
+	// 	position: relative;
+	// }
+	
+	// .data_select {
+	// 	position: absolute;
+	// 	left: 50%;
+	// 	bottom: 0px;
+	// 	transform: translateX(-50%);
+	// 	color: #fff;
+	// }
+	
+	// .data_active {
+	// 	background: rgba(64, 158, 225, 0.5);
+	// }
+	// .type {
+	// 	flex-direction: column;
+	// }
+	// .container_top {
+	// 	display: flex;
+	// 	justify-content: space-between;
+	// 	width: 100% !important;
+	// }
 </style>
