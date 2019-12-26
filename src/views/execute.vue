@@ -376,6 +376,7 @@
 				// _this.texId = uid;
 				_this.extIndex = index;
 				let formData = new FormData();
+				formData.append('un_id', this.uid);
 				formData.append('uid', uid);
 				formData.append('proid', proid)
 				const loading = _this.openLoading();
