@@ -305,7 +305,7 @@
 					competitor: '',
 					goodness: '',
 					lessness: '',
-					position: [],
+					position: '',
 					dialogVisible: false
 				},
 				result: {
@@ -688,20 +688,36 @@
 			updateResult() {
 				let _this = this;
 				let result = _this.result;
-				
-				const loading = _this.openLoading();
-				var params = new FormData()
-				// var params = new URLSearchParams();
-				params.append("uid", _this.uid);
-				// params.append("cid", _this.uid);
-				params.append("sale_name", _this.sale_name); // 销售姓名
-				params.append("customer_name", result.custome); // 客户
-				params.append("brand_name", result.brand); // 名称
-				params.append("brand_slogan", result.sign); // 标语
-				params.append("brand_value", result.opinion); // 价值观				
-				params.append("excellent_case", result.case); // 优秀案例
 				let newResult = [];
-				console.log()
+				if(!result.trade){
+					this.$toast({ message : '行业不能为空!',duration:1000})
+					return;
+				}
+				if(!result.custome){
+					this.$toast({ message : '客户名不能为空!',duration:1000})
+					return;
+				}
+				if(!result.brand){
+					this.$toast({ message : '品牌名不能为空!',duration:1000})
+					return;
+				}
+				if(!result.sign){
+					this.$toast({ message : '标语不能为空!',duration:1000})
+					return;
+				}
+				if(!result.opinion){
+					this.$toast({ message : '价值观不能为空!',duration:1000})
+					return;
+				}
+				if(!result.case){
+					this.$toast({ message : '案例不能为空!',duration:1000})
+					return;
+				}
+				console.log(result.list.length)
+				// if(result.list.length == 0){
+				// 	this.$toast({ message : '行业龙头不能为空!',duration:1000})
+				// 	return;
+				// }
 				result.list.forEach((item) => {
 					let obj = {}
 					obj.product_name = item.name;
@@ -714,6 +730,10 @@
 					obj.caseid = item.caseid;
 					newResult.push(obj)
 				})
+				if(newResult.length == 0){
+					this.$toast({ message : '行业龙头不能为空!',duration:1000})
+					return;
+				}
 				let obj = {
 					id: _this.proId,
 					uid: _this.uid,
@@ -726,6 +746,7 @@
 					excellent_case: result.case,
 					industry_leader: newResult
 				}
+				const loading = _this.openLoading();
 				this.$axios({
 					url: '/getUpcase',
 					method: 'post',
@@ -770,20 +791,33 @@
 			},
 			addResult() {
 				let _this = this;
-				let result = _this.result;
-
-				const loading = _this.openLoading();
-				var params = new FormData()
+				let result = _this.result;	
 				// var params = new URLSearchParams();
-				params.append("uid", _this.uid);
-				params.append("sale_name", _this.sale_name); // 销售姓名
-				params.append("customer_name", result.custome); // 客户
-				params.append("brand_name", result.brand); // 名称
-				params.append("brand_slogan", result.sign); // 标语
-				params.append("brand_value", result.opinion); // 价值观				
-				params.append("excellent_case", result.case); // 优秀案例
 				let newResult = [];
-				
+				if(!result.trade){
+					this.$toast({ message : '行业不能为空!',duration:1000})
+					return;
+				}
+				if(!result.custome){
+					this.$toast({ message : '客户名不能为空!',duration:1000})
+					return;
+				}
+				if(!result.brand){
+					this.$toast({ message : '品牌名不能为空!',duration:1000})
+					return;
+				}
+				if(!result.sign){
+					this.$toast({ message : '标语不能为空!',duration:1000})
+					return;
+				}
+				if(!result.opinion){
+					this.$toast({ message : '价值观不能为空!',duration:1000})
+					return;
+				}
+				if(!result.case){
+					this.$toast({ message : '案例不能为空!',duration:1000})
+					return;
+				}
 				result.list.forEach((item) => {
 					let obj = {}
 					obj.product_name = item.name;
@@ -795,6 +829,11 @@
 					// obj.product_p = item.url;
 					newResult.push(obj)
 				})
+				console.log(newResult)
+				if(newResult.length == 0){
+					this.$toast({ message : '行业龙头不能为空!',duration:1000})
+					return;
+				}
 				let obj = {
 					uid: _this.uid,
 					sale_name: _this.sale_name,
@@ -806,8 +845,8 @@
 					excellent_case: result.case,
 					industry_leader: newResult
 				}
+				const loading = _this.openLoading();
 				console.log(obj)
-				// return;
 				this.$axios({
 					url: '/getAddcase',
 					method: 'post',
@@ -859,7 +898,7 @@
 					competitor: '',
 					goodness: '',
 					lessness: '',
-					position: [],
+					position: '',
 					dialogVisible: false
 				}
 			},
@@ -868,7 +907,24 @@
 
 			},
 			addTradeResult() {
-				console.log(this.addOpinion)
+				if(!this.addOpinion.name){
+					this.$toast({ message : '产品名不能为空!' , duration : 1000}); return;
+				}
+				if(!this.addOpinion.price){
+					this.$toast({ message : '产品价格不能为空!' , duration : 1000}); return;
+				}
+				if(!this.addOpinion.name){
+					this.$toast({ message : '产品名不能为空!' , duration : 1000}); return;
+				}
+				if(!this.addOpinion.goodness){
+					this.$toast({ message : '对比优势不能为空!' , duration : 1000}); return;
+				}
+				if(!this.addOpinion.lessness){
+					this.$toast({ message : '对比劣势不能为空!' , duration : 1000}); return;
+				}
+				if(!this.addOpinion.position){
+					this.$toast({ message : '产品定位不能为空!' , duration : 1000}); return;
+				}	
 				console.log(this.result)
 				let _this = this;
 				const loading = _this.openLoading();
