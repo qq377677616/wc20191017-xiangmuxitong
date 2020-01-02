@@ -447,6 +447,8 @@
 					let color = ''
 					if (money == '0-3W' || money == '0-5W') {
 						color = 'green'
+					}else if (money == '3-5W') {
+						color = '#45e5d9'
 					} else if (money == '3-8W' || money == '5-10W') {
 						color = 'blue'
 					} else if (money == '8-15W' || money == '10-15W') {
@@ -462,6 +464,8 @@
 					let color = ''
 					if (money == '0-3W' || money == '0-5W') {
 						color = '绿色'
+					} else if (money == '3-5W') {
+						color = '青色'
 					} else if (money == '3-8W' || money == '5-10W') {
 						color = '蓝色'
 					} else if (money == '8-15W' || money == '10-15W') {
