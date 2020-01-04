@@ -314,7 +314,7 @@
 									_this.$router.replace({
 										name: 'administration'
 									})
-								} else if (type == 3 || type == 4 || type == 8) {
+								} else if (type == 3 || type == 4 || type == 8 || type == 9) {
 									localStorage.setItem('role', _this.compileStr(_this.typeList[1] + "&&" + res.data.data.user_phone + ""))
 									_this.$router.replace({
 										name: 'commercial'

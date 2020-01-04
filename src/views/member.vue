@@ -54,8 +54,8 @@
 							<el-menu-item class="icon_menu" index="5" @click="showPlot">
 								<i class="el-icon-coin"></i>
 								<div class="plot_box">
-									<div><span>前端</span></div>
-									<div class="plot_from"><span>湖南网晨网络科技有限公司</span><span class="plot_line">/</span><span>前端</span></div>
+									<div><span>{{plot}}</span></div>
+									<div class="plot_from"><span>湖南网晨网络科技有限公司</span><span class="plot_line">/</span><span>{{plot}}</span></div>
 								</div>
 								
 								<div class="icon_right">
@@ -174,7 +174,7 @@
 			<div class="wc-page-top">
 				<div class="top-name">
 					<div class="top-close iconfont icon-zuojiantou" @click="backInfo"><span>返回</span></div>
-					<div class="top-title">前端</div>
+					<div class="top-title">{{plot}}</div>
 				</div>
 			</div>
 			<div class="member_content">
@@ -304,6 +304,10 @@
 					{
 						id: 9,
 						design: '测试'
+					},
+					{
+						id: 10,
+						design: '公共'
 					}
 				],
 				BranchList: [{
@@ -342,6 +346,10 @@
 					id: 9,
 					branch: '测试',
 					personList: []
+				}, {
+					id: 10,
+					branch: '公共',
+					personList: []
 				}],
 				showPost: false,
 				showOffice: false,
@@ -350,7 +358,8 @@
 				branchIndex: 0,
 				loading: false,
 				search: '',
-				canChange : true
+				canChange : true,
+				plot : ''
 			}
 		},
 		components: {
@@ -1018,6 +1027,15 @@
 			this.role = role
 			let id = localStorage.getItem('id', )
 			let uid = _this.uncompileStr(id).split('&&')[1];
+			let postList = this.postList;
+			let plot = '';
+			let type = localStorage.getItem('type')
+			for(var prop in postList){
+				if(postList[prop].id == type){
+					plot = postList[prop].design
+				}
+			}
+			this.plot = plot;
 			this.uid = uid;
 			this.loading = true;
 			let workList = [];
@@ -1387,5 +1405,16 @@
 		position: absolute;
 		top: -50px;
 		z-index: 999;
+	}
+	.member_content .van-collapse {
+		padding-bottom:0;
+		margin-top:30px;
+	}
+	.office-list-content .van-collapse-item__content {
+		margin: 5px 10px 20px;
+	}
+	.office-list-content {
+		margin: 0;
+		padding:0;
 	}
 </style>

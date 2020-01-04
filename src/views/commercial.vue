@@ -686,6 +686,80 @@
 										}
 									})
 								})
+								
+								res.data.data.forEach((item) => {
+									let sjList = [],
+										qdList = [],
+										hdList = []
+									item.ext.forEach((extItem) => {
+										if (extItem.design == '设计') {
+											if (extItem.speed == '' || extItem.speed == null) {
+												extItem.speed = 0
+											} else {
+												extItem.speed = parseInt(extItem.speed)
+											}
+											sjList.push(extItem.speed)
+										} else if (extItem.design == '前端') {
+											if (extItem.speed == '' || extItem.speed == null) {
+												extItem.speed = 0
+											} else {
+												extItem.speed = parseInt(extItem.speed)
+											}
+											qdList.push(extItem.speed)
+										} else if (extItem.design == '后端') {
+											if (extItem.speed == '' || extItem.speed == null) {
+												extItem.speed = 0
+											} else {
+												extItem.speed = parseInt(extItem.speed)
+											}
+											hdList.push(extItem.speed)
+										}
+									})
+									let sj = 0,
+										qd = 0,
+										hd = 0
+									if (sjList.length == 0) {
+										sj = 0
+									} else {
+										for (var i = 0; i < sjList.length; i++) {
+											sj += sjList[i]
+										}
+									}
+								
+									if (qdList.length == 0) {
+										qd = 0
+									} else {
+										for (var i = 0; i < qdList.length; i++) {
+											qd += qdList[i]
+										}
+									}
+								
+									if (hdList.length == 0) {
+										hd = 0
+									} else {
+										for (var i = 0; i < hdList.length; i++) {
+											hd += hdList[i]
+										}
+									}
+								
+									if (sj == 0) {
+										item.sjScore = 0
+									} else {
+										item.sjScore = parseInt(sj / sjList.length)
+									}
+								
+									if (qd == 0) {
+										item.qdScore = 0
+									} else {
+										item.qdScore = parseInt(qd / qdList.length)
+									}
+								
+									if (hd == 0) {
+										item.hdScore = 0
+									} else {
+										item.hdScore = parseInt(hd / hdList.length)
+									}
+								})
 								res.data.data.forEach((item) => {
 									res.data.data.forEach((item) => {
 										let time = _this.DateMinus(_this.DayChange(new Date()), item.shangx_time)
@@ -772,6 +846,81 @@
 										}
 									})
 								})
+								
+								res.data.data.forEach((item) => {
+									let sjList = [],
+										qdList = [],
+										hdList = []
+									item.ext.forEach((extItem) => {
+										if (extItem.design == '设计') {
+											if (extItem.speed == '' || extItem.speed == null) {
+												extItem.speed = 0
+											} else {
+												extItem.speed = parseInt(extItem.speed)
+											}
+											sjList.push(extItem.speed)
+										} else if (extItem.design == '前端') {
+											if (extItem.speed == '' || extItem.speed == null) {
+												extItem.speed = 0
+											} else {
+												extItem.speed = parseInt(extItem.speed)
+											}
+											qdList.push(extItem.speed)
+										} else if (extItem.design == '后端') {
+											if (extItem.speed == '' || extItem.speed == null) {
+												extItem.speed = 0
+											} else {
+												extItem.speed = parseInt(extItem.speed)
+											}
+											hdList.push(extItem.speed)
+										}
+									})
+									let sj = 0,
+										qd = 0,
+										hd = 0
+									if (sjList.length == 0) {
+										sj = 0
+									} else {
+										for (var i = 0; i < sjList.length; i++) {
+											sj += sjList[i]
+										}
+									}
+								
+									if (qdList.length == 0) {
+										qd = 0
+									} else {
+										for (var i = 0; i < qdList.length; i++) {
+											qd += qdList[i]
+										}
+									}
+								
+									if (hdList.length == 0) {
+										hd = 0
+									} else {
+										for (var i = 0; i < hdList.length; i++) {
+											hd += hdList[i]
+										}
+									}
+								
+									if (sj == 0) {
+										item.sjScore = 0
+									} else {
+										item.sjScore = parseInt(sj / sjList.length)
+									}
+								
+									if (qd == 0) {
+										item.qdScore = 0
+									} else {
+										item.qdScore = parseInt(qd / qdList.length)
+									}
+								
+									if (hd == 0) {
+										item.hdScore = 0
+									} else {
+										item.hdScore = parseInt(hd / hdList.length)
+									}
+								})
+								
 								res.data.data.forEach((item) => {
 									res.data.data.forEach((item) => {
 										let time = _this.DateMinus(_this.DayChange(new Date()), item.shangx_time)

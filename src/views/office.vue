@@ -106,6 +106,10 @@
 					{
 						id: 9,
 						design: '测试'
+					},
+					{
+						id: 10,
+						design: '公共'
 					}
 				],
 				BranchList: [{
@@ -143,6 +147,10 @@
 				}, {
 					id: 9,
 					branch: '测试',
+					personList: []
+				},{
+					id: 10,
+					branch: '公共',
 					personList: []
 				}],
 				showPost: false,
