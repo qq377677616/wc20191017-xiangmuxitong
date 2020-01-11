@@ -38,21 +38,22 @@
 							</tr>
 						</table>
 					</td>
-					<td style="width:7%;min-width: 100px;text-align:center;">优秀案例</td>
+					<td style="width:7%;min-width: 100px;text-align:center;max-width: 300px;overflow:hidden">优秀案例</td>
 					<td style="width:7%;min-width: 100px;text-align:center;">操作</td>
 				</tr>
 				<tr v-for="(dataItem,dataIndex) in dataList" :key="dataItem.Id">
-					<td  style="min-width: 100px;text-align:center;">{{dataItem.trade_name}}</td>
-					<td  style="min-width: 100px;text-align:center;">{{dataItem.customer_name}}</td>
-					<td  style="min-width: 100px;text-align:center;">{{dataItem.brand_name}}</td>
-					<td  style="min-width: 100px;text-align:center;">{{dataItem.brand_slogan}}</td>
-					<td style="min-width: 100px;text-align:center;">{{dataItem.brand_value}}</td>
-					
-					<td>
-						<table style="text-align:center;" v-for="ext in dataItem.ext" :key="ext.id">
-							<tr>
+					<td style="min-width: 100px;text-align:center;">{{dataItem.trade_name}}</td>
+					<td style="min-width: 100px;text-align:center;">{{dataItem.customer_name}}</td>
+					<td style="min-width: 100px;text-align:center;">{{dataItem.brand_name}}</td>
+					<td style="min-width: 100px;text-align:center;">{{dataItem.brand_slogan}}</td>
+					<td style="min-width: 100px;text-align:center;" :ref="dataItem.name">{{dataItem.brand_value}}</td>
+
+					<td style="width: 100%;padding:0" border="1">
+						<table :style="{height:dataItem.height}" border="1" cellpadding="0" cellspacing="0" v-for="(ext,extIndex)  in dataItem.ext"
+						 :key="ext.id">
+							<tr :style="{height:dataItem.height}">
 								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.product_name}}</td>
-								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.product_price}}</td>
+								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;" :ref="ext.name">{{ext.product_price}}</td>
 								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.direct_pro}}</td>
 								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.comparative_a}}</td>
 								<td style="width:7%;min-width: 100px;max-width:200px;text-align:center;border-right:1px solid #000;">{{ext.comparative_d}}</td>
@@ -61,21 +62,16 @@
 							</tr>
 						</table>
 					</td>
-<!-- 					<td style="min-width: 100px;text-align:center;" v-for="ext in (longer - dataItem.ext.length)"
-					 :key="ext.id">
-						<table>
-							<tr>
-								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
-								<td style="min-width: 100px;text-align:center;border-right:1px solid #000;"></td>
-								<td style='min-width: 100px;text-align:center;'></td>
-							</tr>
-						</table>
-					</td> -->
-					<td style="width:7%;min-width: 100px;text-align:center;">
-						{{dataItem.excellent_case}}
+					<td style="width:7%;min-width: 200px;text-align:center;max-width: 300px;overflow:hidden;
+text-overflow:ellipsis;
+white-space: nowrap;">
+						<input style="width: 85%;background:#f5f5f5;border: none;
+						padding: 0px 5px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						"
+						 class='btn_copy' type="button" name="anniu2" @click='copyUrl(dataItem.excellent_case)' v-model="dataItem.excellent_case">
 					</td>
 					<td style="width:8%;min-width: 100px;text-align:center;">
 						<table>
@@ -83,8 +79,6 @@
 								<td style='width:7%;min-width: 100px;text-align:center;'>
 									<el-button type="primary" plain style="padding:5px 10px" @click.native="showCase(dataItem.id,dataIndex)">修改</el-button>
 									<el-button type="danger" plain style="padding:5px 10px" @click.native="deleteTable(dataItem.id)">删除</el-button>
-									<!-- 										<span style="margin-left:20px;background: #ff5500;color:#fff;border-radius: 10px;padding:5px 20prx">修改</span>
-										<span style="margin-left:20px;background: #ff5500;color:#fff;border-radius: 10px;padding:5px 20prx">删除</span> -->
 								</td>
 
 							</tr>
@@ -93,7 +87,6 @@
 				</tr>
 				<Footer></Footer>
 			</table>
-
 		</div>
 
 		<el-dialog :visible.sync="finishModalShow" :append-to-body='true' class='finish_modal'>
@@ -127,7 +120,7 @@
 					<template slot="prepend">优秀案例:</template>
 				</el-input>
 			</div>
-				
+
 			<div class='input_form'>
 				<div class='input_title'>行业龙头: <i class="el-icon-circle-plus c_info" @click="addTrade()"></i></div>
 				<div v-for="(listItem,listIndex) in result.list" :key="listIndex">
@@ -150,15 +143,6 @@
 					<el-input placeholder="请输入内容" v-model="listItem.position">
 						<template slot="prepend">产品人群定位:</template>
 					</el-input>
-		<!-- 			<div class='pro_position'>
-						<span>产品人群定位</span>
-						<div class="member_content member_img">
-							<el-image :src="listItem.position" v-if="listItem.position" fit="cover">
-					
-							</el-image>
-							<input type="file" class="upload" @change="inputerFinish($event,listIndex)" ref="inputerFinish">
-						</div>
-					</div> -->
 				</div>
 				<div class="submit_box">
 					<el-button type='primary' plain @click.native="addResult()">新增</el-button>
@@ -219,18 +203,6 @@
 					<el-input placeholder="请输入内容" v-model="listItem.position">
 						<template slot="prepend">产品人群定位:</template>
 					</el-input>
-<!-- 					<div class='pro_position'>
-						<span>产品人群定位</span>
-
-
-
-						<div class="member_content member_img">
-							<el-image :src="listItem.position" v-if="listItem.position" fit="cover">
-
-							</el-image>
-							<input type="file" class="upload" @change="inputerUpdate($event,listIndex)" ref="inputerUpdate">
-						</div>
-					</div> -->
 				</div>
 				<div class="submit_box">
 					<el-button type='primary' plain @click.native="updateResult()">修改</el-button>
@@ -259,19 +231,6 @@
 					<el-input placeholder="请输入内容" v-model="addOpinion.position">
 						<template slot="prepend">产品人群定位:</template>
 					</el-input>
-<!-- 					<div class='pro_position'>
-						<span>产品人群定位</span>
-
-
-
-						<div class="member_content member_img">
-							<el-image :src="addOpinion.position" v-if="addOpinion.position" fit="cover">
-
-							</el-image>
-							<input type="file" class="upload" @change="inputerAdd($event)" ref="inputerAdd">
-						</div>
-
-					</div> -->
 				</div>
 				<div class="submit_box">
 					<el-button type='primary' plain @click.native="addTradeResult()">添加信息</el-button>
@@ -283,8 +242,6 @@
 </template>
 
 <script>
-	// import '@/common/Blob.js'
-	// import '@/common/Export2Excel.js'
 	import '@/common/jquery.table2excel.js'
 	import qs from 'qs'
 	export default {
@@ -324,19 +281,54 @@
 				sale_name: '',
 				uid: '',
 				updateModalShow: false,
-				proId: ''
+				proId: '',
+				showIndex: ''
 			}
 		},
 		components: {
 			Footer: () => import('components/footer.vue'),
 		},
 		mounted() {
-
+			let _this = this;
+			new Promise((resovle,reject)=>{
+				setTimeout(()=>{
+					let data = JSON.parse(JSON.stringify(_this.dataList));
+					_this.$nextTick(() => {
+						console.log(_this.$refs)
+						data.forEach((item, index) => {
+							let brand_log = _this.$refs.brand_log[index].clientHeight;
+							console.log(brand_log)
+							item.height = new Number(brand_log) + 30 + 'px'
+						})
+						this.dataList = data;
+						console.log(data)
+					});	
+				},1500)
+			})
 		},
 		methods: {
-			inputerAdd(event){
+			copyUrl(data) {
+				let url = data;
+				let oInput = document.createElement('input');
+				oInput.value = url;
+				document.body.appendChild(oInput);
+				oInput.select(); // 选择对象;
+				console.log(oInput.value)
+				document.execCommand("Copy"); // 执行浏览器复制命令
+				this.$toast({
+					message: '已成功复制到剪切板',
+					duration: 1000
+				});
+				oInput.remove()
+			},
+			changeIndex(index) {
+				// console.log(index)
+				this.showIndex = new Number(index);
+				console.log(index)
+			},
+			inputerAdd(event) {
 				let _this = this;
-				
+
 				let inputDOM = this.$refs.inputerAdd;
 				// 通过DOM取文件数据
 				this.fil = inputDOM.files;
@@ -345,14 +337,11 @@
 					alert('请选择5M以内的图片！');
 					return false
 				}
-				//调用上传图片的接口;
-				// _this.memberUpdate.update_img = this.getObjectURL(this.fil[0]);
-				// this.member.infoImg = _this.memberUpdate.update_img
-				this.getUrl(this.fil[0],0,0);
+				this.getUrl(this.fil[0], 0, 0);
 			},
-			inputerUpdate(event,index){
+			inputerUpdate(event, index) {
 				let _this = this;
-				
+
 				let inputDOM = _this.$refs.inputerUpdate[index];
 				// 通过DOM取文件数据
 				_this.fil = inputDOM.files;
@@ -365,11 +354,11 @@
 				//调用上传图片的接口;
 				// _this.memberUpdate.update_img = this.getObjectURL(this.fil[0]);
 				// this.member.infoImg = _this.memberUpdate.update_img
-				_this.getUrl(_this.fil[0],1,index);
+				_this.getUrl(_this.fil[0], 1, index);
 			},
-			inputerFinish(event,index){
+			inputerFinish(event, index) {
 				let _this = this;
-				
+
 				let inputDOM = this.$refs.inputerFinish[index];
 				console.log(inputDOM)
 				// 通过DOM取文件数据
@@ -383,11 +372,11 @@
 				//调用上传图片的接口;
 				// _this.memberUpdate.update_img = this.getObjectURL(this.fil[0]);
 				// this.member.infoImg = _this.memberUpdate.update_img
-				this.getUrl(this.fil[0],1,index);
+				this.getUrl(this.fil[0], 1, index);
 			},
-			addImg(event,num) {
+			addImg(event, num) {
 				let _this = this;
-				
+
 				let inputDOM = num == 0 ? this.$refs.inputer : this.$refs.inputer;
 				// 通过DOM取文件数据
 				this.fil = inputDOM.files;
@@ -401,7 +390,7 @@
 				// this.member.infoImg = _this.memberUpdate.update_img
 				this.getUrl(this.fil[0]);
 			},
-			getUrl(file,num,index) {
+			getUrl(file, num, index) {
 				let _this = this;
 				let formData = new FormData();
 				formData.append('caseimg', file);
@@ -417,19 +406,14 @@
 					if (res.data.errcode == 0) {
 						setTimeout(() => {
 							// this.loading = false;
-
 							loading.close();
-
 							setTimeout(() => {
-								if(num == 1){
+								if (num == 1) {
 									_this.result.list[index].position = res.data.msg;
-								}else {
+								} else {
 									_this.addOpinion.position = res.data.msg;
 								}
-								// this.findList();
-								// this.findDetails(pid);
 							}, 500)
-
 						}, 500)
 					} else {
 						setTimeout(() => {
@@ -442,7 +426,6 @@
 								});
 
 							}, 500)
-
 						}, 500)
 					}
 				}).catch(() => {
@@ -535,12 +518,25 @@
 								let data = res.data.data ? res.data.data : [];
 								let ext = 0;
 
-								res.data.data.forEach((item) => {
+								res.data.data.forEach((item, index) => {
 									ext = item.ext.length > ext ? item.ext.length : ext;
+									item.name = 'brand_log';
 								})
 								this.longer = ext;
 								this.dataList = data;
-
+								new Promise((resovle,reject)=>{
+									setTimeout(()=>{
+										let data = JSON.parse(JSON.stringify(_this.dataList));
+										_this.$nextTick(() => {
+											data.forEach((item, index) => {
+												let brand_log = _this.$refs.brand_log[index].clientHeight;
+												console.log(brand_log)
+												item.height = new Number(brand_log) + 30 + 'px'
+											})
+											this.dataList = data;
+										});	
+									},1500)
+								})
 							}, 500)
 						}, 500)
 
@@ -566,30 +562,35 @@
 				})
 			},
 			findResult() {
-				this.$axios({
-					url: '/getSelcase',
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					},
-				}).then((res) => {
-					if (res.data) {
-						let data = res.data.data ? res.data.data : [];
-						let ext = 0;
-						let newData = [];	
-						data.forEach((item) => {
-							ext = item.ext.length > ext ? item.ext.length : ext;
-							if(item.ext.length){
-								newData.push(item)
-							}
-						})
-						this.longer = ext;
-						this.dataList = data;
-
-					}
-				}).catch(() => {
-
+				let _this = this;
+				new Promise((resolve,reject)=>{
+					_this.$axios({
+						url: '/getSelcase',
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+					}).then((res) => {
+						if (res.data) {
+							let data = res.data.data ? res.data.data : [];
+							let ext = 0;
+							let newData = [];
+							data.forEach((item) => {
+								ext = item.ext.length > ext ? item.ext.length : ext;
+								if (item.ext.length) {
+									newData.push(item)
+								}
+								item.name = 'brand_log';
+							})
+							_this.longer = ext;
+							_this.dataList = data;
+							resolve();
+						}
+					}).catch(() => {
+					
+					})	
 				})
+				
 			},
 			beforeRead(file) { //上传之前校验
 				// if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
@@ -602,7 +603,6 @@
 			},
 			afterRead(file) {
 				// 此时可以自行将文件上传至服务器
-
 				console.log(file.file);
 				this.addOpinion.position = file
 				// this.getUrl(file)
@@ -643,9 +643,7 @@
 						if (res.data.errcode == 0) {
 							setTimeout(() => {
 								// this.loading = false;
-
 								loading.close();
-
 								setTimeout(() => {
 									_this.$toast({
 										message: '删除成功!',
@@ -655,7 +653,6 @@
 									// this.findList();
 									// this.findDetails(pid);
 								}, 500)
-
 							}, 500)
 						} else {
 							setTimeout(() => {
@@ -666,7 +663,6 @@
 										message: res.data.msg + '!',
 										duration: 1000
 									});
-
 								}, 500)
 
 							}, 500)
@@ -689,28 +685,46 @@
 				let _this = this;
 				let result = _this.result;
 				let newResult = [];
-				if(!result.trade){
-					this.$toast({ message : '行业不能为空!',duration:1000})
+				if (!result.trade) {
+					this.$toast({
+						message: '行业不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.custome){
-					this.$toast({ message : '客户名不能为空!',duration:1000})
+				if (!result.custome) {
+					this.$toast({
+						message: '客户名不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.brand){
-					this.$toast({ message : '品牌名不能为空!',duration:1000})
+				if (!result.brand) {
+					this.$toast({
+						message: '品牌名不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.sign){
-					this.$toast({ message : '标语不能为空!',duration:1000})
+				if (!result.sign) {
+					this.$toast({
+						message: '标语不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.opinion){
-					this.$toast({ message : '价值观不能为空!',duration:1000})
+				if (!result.opinion) {
+					this.$toast({
+						message: '价值观不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.case){
-					this.$toast({ message : '案例不能为空!',duration:1000})
+				if (!result.case) {
+					this.$toast({
+						message: '案例不能为空!',
+						duration: 1000
+					})
 					return;
 				}
 				console.log(result.list.length)
@@ -730,8 +744,11 @@
 					obj.caseid = item.caseid;
 					newResult.push(obj)
 				})
-				if(newResult.length == 0){
-					this.$toast({ message : '行业龙头不能为空!',duration:1000})
+				if (newResult.length == 0) {
+					this.$toast({
+						message: '行业龙头不能为空!',
+						duration: 1000
+					})
 					return;
 				}
 				let obj = {
@@ -791,31 +808,49 @@
 			},
 			addResult() {
 				let _this = this;
-				let result = _this.result;	
+				let result = _this.result;
 				// var params = new URLSearchParams();
 				let newResult = [];
-				if(!result.trade){
-					this.$toast({ message : '行业不能为空!',duration:1000})
+				if (!result.trade) {
+					this.$toast({
+						message: '行业不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.custome){
-					this.$toast({ message : '客户名不能为空!',duration:1000})
+				if (!result.custome) {
+					this.$toast({
+						message: '客户名不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.brand){
-					this.$toast({ message : '品牌名不能为空!',duration:1000})
+				if (!result.brand) {
+					this.$toast({
+						message: '品牌名不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.sign){
-					this.$toast({ message : '标语不能为空!',duration:1000})
+				if (!result.sign) {
+					this.$toast({
+						message: '标语不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.opinion){
-					this.$toast({ message : '价值观不能为空!',duration:1000})
+				if (!result.opinion) {
+					this.$toast({
+						message: '价值观不能为空!',
+						duration: 1000
+					})
 					return;
 				}
-				if(!result.case){
-					this.$toast({ message : '案例不能为空!',duration:1000})
+				if (!result.case) {
+					this.$toast({
+						message: '案例不能为空!',
+						duration: 1000
+					})
 					return;
 				}
 				result.list.forEach((item) => {
@@ -830,8 +865,11 @@
 					newResult.push(obj)
 				})
 				console.log(newResult)
-				if(newResult.length == 0){
-					this.$toast({ message : '行业龙头不能为空!',duration:1000})
+				if (newResult.length == 0) {
+					this.$toast({
+						message: '行业龙头不能为空!',
+						duration: 1000
+					})
 					return;
 				}
 				let obj = {
@@ -907,24 +945,48 @@
 
 			},
 			addTradeResult() {
-				if(!this.addOpinion.name){
-					this.$toast({ message : '产品名不能为空!' , duration : 1000}); return;
+				if (!this.addOpinion.name) {
+					this.$toast({
+						message: '产品名不能为空!',
+						duration: 1000
+					});
+					return;
 				}
-				if(!this.addOpinion.price){
-					this.$toast({ message : '产品价格不能为空!' , duration : 1000}); return;
+				if (!this.addOpinion.price) {
+					this.$toast({
+						message: '产品价格不能为空!',
+						duration: 1000
+					});
+					return;
 				}
-				if(!this.addOpinion.name){
-					this.$toast({ message : '产品名不能为空!' , duration : 1000}); return;
+				if (!this.addOpinion.name) {
+					this.$toast({
+						message: '产品名不能为空!',
+						duration: 1000
+					});
+					return;
 				}
-				if(!this.addOpinion.goodness){
-					this.$toast({ message : '对比优势不能为空!' , duration : 1000}); return;
+				if (!this.addOpinion.goodness) {
+					this.$toast({
+						message: '对比优势不能为空!',
+						duration: 1000
+					});
+					return;
 				}
-				if(!this.addOpinion.lessness){
-					this.$toast({ message : '对比劣势不能为空!' , duration : 1000}); return;
+				if (!this.addOpinion.lessness) {
+					this.$toast({
+						message: '对比劣势不能为空!',
+						duration: 1000
+					});
+					return;
 				}
-				if(!this.addOpinion.position){
-					this.$toast({ message : '产品定位不能为空!' , duration : 1000}); return;
-				}	
+				if (!this.addOpinion.position) {
+					this.$toast({
+						message: '产品定位不能为空!',
+						duration: 1000
+					});
+					return;
+				}
 				console.log(this.result)
 				let _this = this;
 				const loading = _this.openLoading();
@@ -1316,8 +1378,8 @@
 	.table2excel tr td>div:last-child {
 		border-bottom: none;
 	}
-	
-/* 	.table2excel > tr > td {
+
+	/* 	.table2excel > tr > td {
 		
 	} */
 
@@ -1343,7 +1405,7 @@
 		border-right : none
 	} */
 	.table2excel tr>td>table:nth-child(2n) {
-		border-top:1px solid #000;
+		border-top: 1px solid #000;
 	}
 
 	.table table tr .has_content {
@@ -1355,14 +1417,14 @@
 		font-size: 12px;
 		width: 100%;
 	}
-	
+
 	.table2excel tr td {
-		height: 100px;
-		word-wrap:break-word;
+		min-height: 200px;
+		word-wrap: break-word;
 		/* line-height: 100px; */
 	}
-	
-/* 	.table2excel table tr {
+
+	/* 	.table2excel table tr {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -1510,7 +1572,7 @@
 	}
 
 	.pro_position {
-		margin-bottom : 20px;
+		margin-bottom: 20px;
 		display: flex;
 	}
 
@@ -1539,11 +1601,39 @@
 		height: 100%;
 		opacity: 0;
 	}
-	
+
 	@media screen and (max-width:1900px) {
-		table tr td .el-button:nth-child(2){
-			margin-left:0px;
-			margin-top:5px;
+		table tr td .el-button:nth-child(2) {
+			margin-left: 0px;
+			margin-top: 5px;
 		}
+	}
+
+	table tr td {
+		position: relative;
+	}
+
+	.copy {
+		position: absolute;
+		top: 50%;
+		right: 5px;
+		transform: translateY(-50%);
+	}
+
+	.line-url {
+		display: inline-block;
+		width: 85%;
+		box-sizing: border-box;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.copy-box {
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 </style>

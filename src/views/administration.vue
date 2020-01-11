@@ -12,7 +12,6 @@
 			</div>
 		</div>
 		<div class="wc-page-content">
-			
 			<div class="search-content">
 				<el-input @click.native="inputClick($event)" placeholder="请输入中文关键字" v-model="search" @blur="scrollChange" clearable>
 				</el-input>
@@ -79,22 +78,13 @@
 													</div>													
 												</div>
 											</div>
-
-
 										</div>
-<!-- 										<div class="info">
-											<span>销售评分:</span>
-											<span v-html="sjProject.score"></span>
-										</div> -->
 									</div>
 								</div>
 								<div class="type-wrapper-container" v-if="cpProject.nameList != ''">
 									<div class="type">
 										<div>
 											<span>产品</span>
-											<!--<div class="name">-->
-											<!--<span></span>-->
-											<!--</div>-->
 											<div class="type-bottom-name">
 												<div class="type-name-title" v-for="(cpItem,cpIndex) in cpProject.nameList" :key="cpIndex">												
 													<div class='set_score_name' v-html="cpItem.zx_name"></div>
@@ -105,19 +95,12 @@
 												</div>			
 											</div>
 										</div>
-<!-- 										<div class="info">
-											<span>销售评分:</span>
-											<span v-html="cpProject.score"></span>
-										</div> -->
 									</div>
 								</div>
 								<div class="type-wrapper-container" v-if="qdProject.nameList != ''">
 									<div class="type">
 										<div>
 											<span>前端</span>
-											<!--<div class="name">-->
-											<!--<span></span>-->
-											<!--</div>-->
 											<div class="type-bottom-name">											
 												<div class="type-name-title" v-for="(qdItem,qdIndex) in qdProject.nameList" :key="qdIndex">
 													<div class='set_score_name' v-html="qdItem.zx_name"></div>
@@ -129,20 +112,12 @@
 											</div>
 
 										</div>
-<!-- 										<div class="info">
-											<span>销售评分:</span>
-											<span v-html="qdProject.score"></span>
-										</div> -->
 									</div>
 								</div>
 								<div class="type-wrapper-container" v-if="hdProject.nameList != ''">
 									<div class="type">
 										<div>
 											<span>后端</span>
-											<!--<div class="name">-->
-											<!--<span></span>-->
-											<!--</div>-->
-
 											<div class="type-bottom-name">
 												<div class="type-name-title" v-for="(hdItem,hdIndex) in hdProject.nameList" :key="hdIndex">
 													<div class='set_score_name' v-html="hdItem.zx_name"></div>
@@ -153,19 +128,12 @@
 												</div>	
 											</div>
 										</div>
-<!-- 										<div class="info">
-											<span>销售评分:</span>
-											<span v-html="hdProject.score"></span>
-										</div> -->
 									</div>
 								</div>
 								<div class="type-wrapper-container" v-if="csProject.nameList != ''">
 									<div class="type">
 										<div>
 											<span>测试</span>
-											<!--<div class="name">-->
-											<!--<span></span>-->
-											<!--</div>-->
 											<div class="type-bottom-name">
 												<div class="type-name-title" v-for="(csItem,csIndex) in csProject.nameList" :key="csIndex">
 													<div class='set_score_name' v-html="csItem.zx_name"></div>
@@ -177,10 +145,6 @@
 											</div>
 
 										</div>
-	<!-- 									<div class="info">
-											<span>销售评分:</span>
-											<span v-html="qdProject.score"></span>
-										</div> -->
 									</div>
 								</div>
 								<div class="appraise-container" v-if="content">
