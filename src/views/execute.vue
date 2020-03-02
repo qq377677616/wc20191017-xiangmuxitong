@@ -879,6 +879,7 @@
 								// 	}
 								// })
 								//打卡
+								console.log(JSON.stringify(res.data.data))
 								let allData = res.data.data; //总数据
 								let date = this.daysList; // 每阶段天数
 								allData.forEach((allItem, allIndex) => {
@@ -891,41 +892,39 @@
 											}
 										})
 										extItem.hasCard = false;
+										//初始化结束
 										extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
 											let punchtime = texItem.punchtime.split('-');
-											let temp = punchtime[punchtime.length - 1];
-											let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+											let temp = punchtime[punchtime.length - 1].toString();
+											temp = temp.replace(/\b(0+)/gi,"");
+											extItem.daysList.findIndex((dateItem, dateIndex) => {
 												if (dateItem.name == temp) {
 													//匹配到了
 													dateItem.hasCard = true
-													return true;
-												} else {
-													//未匹配到
-													dateItem.hasCard = false;
-													return false;
 												}
 											})
 										})
 										for (var i = 0; i < extItem.daysList.length; i++) {
-											if (extItem.daysList[i].hasCard) {
+											if(extItem.daysList[i].hasCard){
+												console.log(extItem.daysList[i].name,this.nowDays)
 												if (extItem.daysList[i].name == this.nowDays) {
 													extItem.hasCard = true;
-													break;
+												}else {
+													extItem.hasCard = false;
 												}
 											}
 										}
-									})
+									})	
 								})
-								console.log(res.data.data, '??')
 								// 打卡
 
 								if (this.page == 0) {
-									this.projectList = res.data.data
+									this.projectList = allData
 								} else {
-									res.data.data.forEach((item) => {
+									allData.forEach((item) => {
 										this.projectList.push(item)
 									})
-									if (res.data.data.length < 8) {
+									if (allData.length < 8) {
 										this.isLoading = false;
 									}
 								}
@@ -934,7 +933,7 @@
 
 								_this.finished = true
 								_this.canInit = false
-								_this.projectList = res.data.data
+								_this.projectList = allData
 							} else {
 								// _this.isLoading = false;
 								// _this.loading = false;
@@ -1113,6 +1112,7 @@
 								//详情数据结尾
 
 								//打卡
+								console.log(JSON.stringify(res.data.data))
 								let allData = res.data.data; //总数据
 								let date = this.daysList; // 每阶段天数
 								allData.forEach((allItem, allIndex) => {
@@ -1125,48 +1125,46 @@
 											}
 										})
 										extItem.hasCard = false;
+										//初始化结束
 										extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
 											let punchtime = texItem.punchtime.split('-');
-											let temp = punchtime[punchtime.length - 1];
-											let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+											let temp = punchtime[punchtime.length - 1].toString();
+											temp = temp.replace(/\b(0+)/gi,"");
+											extItem.daysList.findIndex((dateItem, dateIndex) => {
 												if (dateItem.name == temp) {
 													//匹配到了
 													dateItem.hasCard = true
-													return true;
-												} else {
-													//未匹配到
-													dateItem.hasCard = false;
-													return false;
 												}
 											})
 										})
 										for (var i = 0; i < extItem.daysList.length; i++) {
 											if(extItem.daysList[i].hasCard){
+												console.log(extItem.daysList[i].name,this.nowDays)
 												if (extItem.daysList[i].name == this.nowDays) {
 													extItem.hasCard = true;
-													break;
+												}else {
+													extItem.hasCard = false;
 												}
 											}
 										}
-									})
+									})	
 								})
-								console.log(res.data.data, '??')
 								// 打卡
 
 								if (this.page == 0) {
-									this.projectList = res.data.data
+									this.projectList = allData
 								} else {
-									res.data.data.forEach((item) => {
+									allData.forEach((item) => {
 										this.projectList.push(item)
 									})
-									if (res.data.data.length < 8) {
+									if (allData.length < 8) {
 										this.isLoading = false;
 									}
 								}
 
 								_this.finished = true
 								_this.canInit = false
-								_this.projectList = res.data.data
+								_this.projectList = allData
 							} else {
 								// _this.isLoading = false;
 								// _this.loading = false;							
@@ -2233,6 +2231,7 @@
 							//详情数据结尾
 
 							//打卡
+							console.log(JSON.stringify(res.data.data))
 							let allData = res.data.data; //总数据
 							let date = this.daysList; // 每阶段天数
 							allData.forEach((allItem, allIndex) => {
@@ -2245,43 +2244,40 @@
 										}
 									})
 									extItem.hasCard = false;
+									//初始化结束
 									extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
 										let punchtime = texItem.punchtime.split('-');
-										let temp = punchtime[punchtime.length - 1];
-										let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+										let temp = punchtime[punchtime.length - 1].toString();
+										temp = temp.replace(/\b(0+)/gi,"");
+										extItem.daysList.findIndex((dateItem, dateIndex) => {
 											if (dateItem.name == temp) {
 												//匹配到了
 												dateItem.hasCard = true
-												return true;
-											} else {
-												//未匹配到
-												dateItem.hasCard = false;
-												return false;
 											}
 										})
 									})
-									
 									for (var i = 0; i < extItem.daysList.length; i++) {
 										if(extItem.daysList[i].hasCard){
+											console.log(extItem.daysList[i].name,this.nowDays)
 											if (extItem.daysList[i].name == this.nowDays) {
 												extItem.hasCard = true;
-												break;
+											}else {
+												extItem.hasCard = false;
 											}
 										}
 									}
-								})
+								})	
 							})
-							console.log(res.data.data, '??')
 							// 打卡
 
 
 							if (this.page == 0) {
-								this.projectList = res.data.data
+								this.projectList = allData
 							} else {
-								res.data.data.forEach((item) => {
+								allData.forEach((item) => {
 									this.projectList.push(item)
 								})
-								if (res.data.data.length < 8) {
+								if (allData.length < 8) {
 									this.isLoading = false;
 								}
 							}
