@@ -1272,7 +1272,6 @@
 				// _this.mainValue = 
 			},
 			showPopup(index, id) {
-
 				this.nowprojectIndex = index
 				this.nowDetailId = id
 				this.personInfo.branch = ''
@@ -1562,29 +1561,12 @@
 					data: params
 				}).then((res) => {
 					if (res.data.errcode == 0) {
-
 						setTimeout(() => {
 							// _this.loading = false
 							loading.close();
 							setTimeout(() => {
 								let data = {
-
 								}
-								// _this.projectList.forEach((item) => {
-								// 	if (item.hasChange) {
-								// 		let obj = {}
-								// 		obj.creat_time = _this.Change((new Date()))
-								// 		obj.log_id = item.id
-								// 		obj.xmlog_id = projectListNow.id
-								// 		if (item.detail == '' || item.detail == null) {
-								// 			obj.centen_log = ''
-								// 			obj.speed = 0
-								// 		}
-								// 		obj.count_speed = _this.mainValue
-								// 		data.push(obj)
-								// 	}
-								// })
-								// _this.findList();
 								let mIndex = 0;
 								_this.addFind(this.nowDetailId);
 							}, 500)
@@ -1703,7 +1685,6 @@
 							})
 						}
 					})
-					console.log(data)
 					_this.update(data, id)
 				}).catch(() => {
 
@@ -1731,7 +1712,6 @@
 
 							let dataArr = []
 							let projectListNow = _this.projectList[_this.nowprojectIndex];
-
 							let data = {};
 							let project = _this.projectDetailsList[_this.projectDetailsList.length - 1]
 							let newObj = {};
@@ -1835,6 +1815,22 @@
 											listItem.mainValue = parseInt(speed / num)
 										}
 
+									})
+									listItem.ext.forEach((item) => {
+										if (item.design == '产品') {
+											item.isCh = true
+										} else {
+											item.isCh = false
+										}
+									})
+									
+									//判断是否为产品、测试
+									listItem.ext.forEach((item) => {
+										if (item.design == '产品' || item.design == '测试') {
+											item.isCS = true
+										} else {
+											item.isCS = false
+										}
 									})
 								}
 							})
@@ -2174,7 +2170,6 @@
 										item.isCh = false
 									}
 								})
-
 								//判断是否为产品、测试
 								listItem.ext.forEach((item) => {
 									if (item.design == '产品' || item.design == '测试') {
@@ -2183,7 +2178,6 @@
 										item.isCS = false
 									}
 								})
-
 								listItem.ext.forEach((dataItem) => {
 									let id = 0
 									personList.forEach((item) => {
@@ -2197,7 +2191,6 @@
 									} else {
 										dataItem.canChange = false
 									}
-
 									//添加是否可改
 									let canChange = listItem.ext.some((dataItem) => {
 										return u_id == dataItem.user_id
@@ -2219,7 +2212,6 @@
 											item.speed = parseInt(item.speed)
 										}
 									})
-
 									if (speed == 0 || num == 0) {
 										listItem.mainValue = 0
 									} else {
@@ -2229,9 +2221,7 @@
 								})
 							})
 							//详情数据结尾
-
 							//打卡
-							console.log(JSON.stringify(res.data.data))
 							let allData = res.data.data; //总数据
 							let date = this.daysList; // 每阶段天数
 							allData.forEach((allItem, allIndex) => {
@@ -2269,8 +2259,6 @@
 								})	
 							})
 							// 打卡
-
-
 							if (this.page == 0) {
 								this.projectList = allData
 							} else {

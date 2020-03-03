@@ -658,6 +658,7 @@ body {
 
 .emergent {
 	position: relative;
+	z-index:100;
 }
 
 .emergent:before {

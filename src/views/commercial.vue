@@ -32,7 +32,6 @@
 				</div>
 			</div>
 			<div class="statistics">
-
 				<el-button type='primary' plain class="output" @click.native="toSearch()">项目消化情况</el-button>
 				<div class="statistics_right">
 					<div class='price_num'>项目价格统计:</div>
@@ -46,13 +45,12 @@
 				<el-button type='primary' plain class="output" @click.native="toAl()">行业分析</el-button>
 				<el-button type='primary' plain class="output" @click.native="toFx()">案例大全</el-button>
 			</div>
-
 			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
 				<van-list v-model="loadingcontent" :finished="finished" @load="onLoad">
 					<!-- 加载的内容-->
 					<div class="project-card-box" v-for="(projectItem,projectIndex) in projectList" :key="projectIndex">
 						<div :class="['project-card',{'over-header-light':projectItem.is_type == 2,'emergent':projectItem.hasOver,'overTime':projectItem.overTime   }]"
-						 @click.stop="showProject(projectItem.id,$event,projectIndex,projectItem.checked)">
+						 @click="showProject(projectItem.id,$event,projectIndex,projectItem.checked)">
 							<div class="card-top">
 								<div :class="[{'icon-dot':true}]" :style="{backgroundColor : colorSelect(projectItem.price)}"></div>
 								<div class="card-top-left" v-html="projectItem.pro_name">
@@ -93,6 +91,9 @@
 							<div class='operate'>
 								<div class="schedule" @click.stop="showMoney(projectItem.id,projectItem.finance,projectItem.sale_name)">财务进度</div>
 								<div class="schedule" @click.stop="toSchedule(projectItem.id)">查看排期</div>
+							</div>
+							<div class='operate' v-if="projectItem.user_id == uid">
+								<div class="schedule" @click.stop="deleteProject(projectItem.id,projectItem.user_id,projectDetailsIndex)">删除项目（谨慎删除）</div>
 							</div>
 						</div>
 						<div :class="{'type-wrapper':true,'showframe':projectItem.checked}" v-show="projectItem.checked">
@@ -160,14 +161,7 @@
 				<div class='person_info' v-for="(projectDetailsItem,projectDetailsIndex) in projectDetailsList" :key="projectDetailsIndex">
 					<div class='zn_name'>
 						<div>{{projectDetailsItem.zx_name}}：</div>
-						<!-- <div class='name_score'><van-field type='tel' v-model="projectDetailsItem.getscore" placeholder="得分" maxlength='5' /></div> -->
 					</div>
-					<!-- 				<div class='worker_assess'>
-						<label for="">工作占比</label>
-						<van-dropdown-menu class="van_select">
-						  <van-dropdown-item ref="item" v-model="projectDetailsItem.score_value" :options="projectScore.score.list" />
-						</van-dropdown-menu>
-					</div> -->
 					<div class='kh_assess'>
 						<label for="">客户满意度评价</label>
 						<van-dropdown-menu class="van_select">
@@ -234,7 +228,6 @@
 				<el-form-item label="财务进度">
 					<el-input @click.native="inputClick($event)" v-model.number="finance" maxlength='3' min='0' max='100'
 					 @keyup.native="loadNumber($event)" placeholder="财务进度" type="text">
-
 					</el-input>
 				</el-form-item>
 				<el-form-item>
@@ -242,10 +235,6 @@
 				</el-form-item>
 			</el-form>
 		</el-dialog>
-		<!--        <van-loading v-show="loading" class="loading"/>-->
-		<!--        <div class="nodata" v-show="projectList == ''">暂无数据</div>-->
-
-
 		<div class="nodata" v-show="projectList == ''">暂无数据</div>
 		<van-loading v-show="loading" class="loading" />
 		<Footer v-if="!canInit"></Footer>
@@ -510,8 +499,79 @@
 			}, 1500)
 		},
 		methods: {
-			toAnalyse() {
-
+			deleteProject(id, user_id,deleteIndex){
+				let _this = this;
+				console.log(user_id,this.uid)
+				let pass = user_id == this.uid
+				if(!pass){
+					this.$toast({
+						message : '您不是当前项目的商务',
+						duration : 1000
+					})
+					return;
+				}
+				this.$confirm('此操作将永久删除该成员, 是否继续?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					var params = new URLSearchParams();
+					params.append("id", id);
+					// this.loading = true;
+					var loading = this.openLoading();
+					this.$axios({
+						url: '/getBusdelpro',
+						method: 'post',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: params
+					}).then((res) => {
+						if (res.data.errcode == 0) {
+							setTimeout(() => {
+								// this.loading = false;
+								loading.close();
+								setTimeout(() => {
+									this.$toast({
+										message: '删除成功!',
+										duration: 1000
+									});
+									let u_id = this.uid
+									let projectList = this.projectList;
+									projectList.forEach((listItem, listindex) => {
+										if (listItem.id == id) {
+											projectList.splice(deleteIndex, 1)
+										}
+									})
+									this.projectList = projectList
+								}, 500)
+				
+							}, 500)
+						} else {
+							setTimeout(() => {
+								// this.loading = false;
+								loading.close();
+								setTimeout(() => {
+									this.$toast({
+										message: '删除失败！',
+										duration: 1000
+									});
+								}, 500)
+							}, 500)
+						}
+					}).catch(() => {
+						setTimeout(() => {
+							setTimeout(() => {
+								// _this.loading = true;
+								loading.close();
+								_this.$toast({
+									message: "" + res.data.msg + "!",
+									duration: 1000
+								});
+							}, 500)
+						}, 500)
+					})
+				})
 			},
 			toAl() {
 				let _this = this;
@@ -1114,8 +1174,7 @@
 				return data;
 			},
 			showProject(index, e, pIndex, checked) {
-				// e.preventDefault()
-				// debugger;
+				e.stopPropagation();
 				let id = index
 				let lastIndex = sessionStorage.getItem('lastShowIndex')
 				this.projectDetailsList = []
@@ -1761,6 +1820,8 @@
 	.operate {
 		display: flex;
 		justify-content: space-between;
+		position: relative;
+		z-index:1000;
 	}
 
 	.type {
