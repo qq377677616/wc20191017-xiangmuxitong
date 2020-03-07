@@ -55,5 +55,6 @@ module.exports = {
                 "windows.jQuery":"jquery"
             })
         ]
-    }
+    },
+	lintOnSave : false  //关闭seLint校验
 };

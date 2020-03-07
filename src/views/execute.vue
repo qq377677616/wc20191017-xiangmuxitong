@@ -373,7 +373,6 @@
 			addCard(uid, proid, index) {
 				let _this = this;
 				_this.log_id = uid;
-				// _this.texId = uid;
 				_this.extIndex = index;
 				let formData = new FormData();
 				formData.append('un_id', this.uid);
@@ -427,7 +426,6 @@
 						}, 500)
 					}
 				}).catch((error) => {
-					console.log(error)
 					setTimeout(() => {
 						// this.loading = false;
 						loading.close();
@@ -478,19 +476,10 @@
 						setTimeout(() => {
 							loading.close();
 							setTimeout(() => {
-								_this.$toast({
-									message: '删除成功!',
-									duration: 1000
-								});
-								// _this.imageUrl = ''
-								// this.findList();
+								_this.$toast({ message: '删除成功!', duration: 1000 });
 								let id = _this.nowDetailId;
-								// this.findDetails(this.nowDetailId)		
-								// this.findList();
 								_this.projectList.forEach((item, index) => {
-									// item.checked = false;
 									if (item.id == id) {
-										// item.checked = !checked;
 										item.xmimg = _this.initial_sun;
 									}
 								})
@@ -575,7 +564,6 @@
 					}
 				}).catch(() => {
 					setTimeout(() => {
-						// this.loading = false;
 						loading.close();
 						_this.addressVisible = false
 						setTimeout(() => {
@@ -588,7 +576,6 @@
 				})
 
 			},
-
 			addImg(event) {
 				let _this = this;
 				let inputDOM = this.$refs.inputer;
@@ -645,7 +632,6 @@
 				params.append("id", this.nowDetailId);
 				params.append("xm_url", data.xm_url);
 				let _this = this;
-				// _this.loading = true;
 				const loading = this.openLoading();
 				_this.$axios({
 					url: '/getZxurlup',
@@ -656,32 +642,23 @@
 					data: params
 				}).then((res) => {
 					if (res.data.errcode == 0) {
-
 						setTimeout(() => {
-							// _this.loading = false
 							loading.close();
 							setTimeout(() => {
 								_this.$toast({
 									message: '添加成功!',
 									duration: 1000
 								});
-								// this.findList();
 								this.oldAddress = this.address;
 								this.projectList.forEach((item, index) => {
-									// item.checked = false;
 									if (item.id == this.nowDetailId) {
-										// item.checked = !checked;
 										item.xm_url = data.xm_url;
 									}
 								})
-
-								// this.findDetails(this.nowDetailId);
-
 							}, 500)
 						}, 500)
 					} else {
 						setTimeout(() => {
-							// _this.loading = false
 							loading.close();
 							setTimeout(() => {
 								_this.$toast({
@@ -693,7 +670,6 @@
 					}
 				}).catch(() => {
 					setTimeout(() => {
-						// this.loading = false;
 						loading.close();
 						setTimeout(() => {
 							this.$toast({
@@ -706,10 +682,8 @@
 				_this.addressVisible = false
 			},
 			toSchedule(id) {
-				localStorage.setItem('xms_id', id)
-				this.$router.replace({
-					name: 'scheduling'
-				})
+				localStorage.setItem('xms_id', id);
+				this.$router.replace({name: 'scheduling'});
 			},
 			proSearch() {
 				let _this = this;
@@ -724,7 +698,6 @@
 					})
 					return;
 				}
-				// _this.loading = true;
 				const loading = this.openLoading();
 				_this.$axios({
 					url: '/getSearchxm',
@@ -740,7 +713,6 @@
 								res.data.data.forEach((item) => {
 									item.checked = false;
 								})
-
 								let colorList = this.colorList
 								colorList.forEach((item) => {
 									item.num = 0
@@ -769,11 +741,7 @@
 										item.overTime = false
 									}
 								})
-								// _this.isLoading = false;
-								// _this.loading = false;
 								loading.close();
-
-
 								//详情数据开始
 								let isType = this.isType
 								let personType = this.personType
@@ -819,7 +787,6 @@
 										let canChange = listItem.ext.some((dataItem) => {
 											return u_id == dataItem.user_id
 										})
-										console.log(canChange)
 										listItem.canChange = canChange;
 										this.canChange = canChange;
 										//详情数据处理
@@ -847,39 +814,7 @@
 									})
 								})
 								//详情数据结尾
-
-
-								// console.warn(JSON.stringify(_this.daysList), '???2')
-								// console.warn(JSON.stringify(res.data.data), '???1')
-								// // 打卡数据								
-								// res.data.data.forEach((listItem) => {
-								// 	if (listItem.ext.length > 0) {
-								// 		listItem.ext.forEach((extItem) => {
-								// 			let hasCard = false;
-
-								// 			let daysList = _this.daysList;
-								// 			daysList.forEach((dayItem) => {
-								// 				if (extItem.tex.length > 0) {
-								// 					extItem.tex.forEach((item, index) => {
-								// 						console.log(item)
-								// 						item.day = item.punchtime ? item.punchtime.split('-')[2] : '';
-								// 						console.log(dayItem.name, item.day)
-								// 						hasCard = dayItem.name == item.day;
-								// 					})
-								// 				}
-								// 				console.log(hasCard)
-								// 				dayItem.hasCard = hasCard;
-								// 			})
-								// 			console.log(daysList)
-								// 			extItem.daysList = daysList
-
-								// 			// extItem.hasCard = hasCard;  //项目记录当天是否打卡
-								// 			// extItem
-								// 		})
-								// 	}
-								// })
 								//打卡
-								console.log(JSON.stringify(res.data.data))
 								let allData = res.data.data; //总数据
 								let date = this.daysList; // 每阶段天数
 								allData.forEach((allItem, allIndex) => {
@@ -906,7 +841,6 @@
 										})
 										for (var i = 0; i < extItem.daysList.length; i++) {
 											if(extItem.daysList[i].hasCard){
-												console.log(extItem.daysList[i].name,this.nowDays)
 												if (extItem.daysList[i].name == this.nowDays) {
 													extItem.hasCard = true;
 												}else {
@@ -917,7 +851,6 @@
 									})	
 								})
 								// 打卡
-
 								if (this.page == 0) {
 									this.projectList = allData
 								} else {
@@ -928,15 +861,10 @@
 										this.isLoading = false;
 									}
 								}
-
-
-
 								_this.finished = true
 								_this.canInit = false
 								_this.projectList = allData
 							} else {
-								// _this.isLoading = false;
-								// _this.loading = false;
 								loading.close();
 								_this.finished = true
 								_this.canInit = false
@@ -955,9 +883,7 @@
 							duration: 1000
 						})
 					}
-				}).catch(() => {
-
-				})
+				}).catch(() => {})
 			},
 			Search() {
 				let _this = this;
@@ -972,7 +898,6 @@
 					})
 					return;
 				}
-				// _this.loading = true;
 				const loading = this.openLoading();
 				_this.$axios({
 					url: '/getSearchprozx',
@@ -988,7 +913,6 @@
 								res.data.data.forEach((item) => {
 									item.checked = false;
 								})
-
 								let colorList = this.colorList
 								colorList.forEach((item) => {
 									item.num = 0
@@ -1017,12 +941,7 @@
 										item.overTime = false
 									}
 								})
-								// _this.isLoading = false;
-								// _this.loading = false;
 								loading.close();
-
-
-
 								//详情数据开始
 								let isType = this.isType
 								let personType = this.personType
@@ -1039,7 +958,6 @@
 											item.isCh = false
 										}
 									})
-
 									//判断是否为产品、测试
 									listItem.ext.forEach((item) => {
 										if (item.design == '产品' || item.design == '测试') {
@@ -1048,7 +966,6 @@
 											item.isCS = false
 										}
 									})
-
 									listItem.ext.forEach((dataItem) => {
 										let id = 0
 										personList.forEach((item) => {
@@ -1062,7 +979,6 @@
 										} else {
 											dataItem.canChange = false
 										}
-
 										//添加是否可改
 										let canChange = listItem.ext.some((dataItem) => {
 											return u_id == dataItem.user_id
@@ -1095,24 +1011,7 @@
 
 									})
 								})
-								// res.data.data.forEach((listItem)=>{
-								// 	if(listItem.ext.length > 0){
-								// 		listItem.ext.forEach((extItem)=>{
-								// 			console.log(extItem.tex)
-								// 			if(extItem.tex.length>0){
-								// 				extItem.tex.forEach((item)=>{
-								// 					if(item.punchtime){
-								// 						extItem.day = item.punchtime.split('-')[2]
-								// 					}													
-								// 				})
-								// 			}
-								// 		})
-								// 	}
-								// })
-								//详情数据结尾
-
 								//打卡
-								console.log(JSON.stringify(res.data.data))
 								let allData = res.data.data; //总数据
 								let date = this.daysList; // 每阶段天数
 								allData.forEach((allItem, allIndex) => {
@@ -1139,7 +1038,6 @@
 										})
 										for (var i = 0; i < extItem.daysList.length; i++) {
 											if(extItem.daysList[i].hasCard){
-												console.log(extItem.daysList[i].name,this.nowDays)
 												if (extItem.daysList[i].name == this.nowDays) {
 													extItem.hasCard = true;
 												}else {
@@ -1199,7 +1097,7 @@
 			},
 			init() {
 				let self = this;
-				self.findList()
+				// self.findList()
 				// self.findDetails(this.nowDetailId)
 				self.isLoading = false; //关闭下拉刷新效果
 				self.$toast({
@@ -1232,6 +1130,7 @@
 				setTimeout(() => {
 					this.finished = false;
 					this.isLoading = false;
+					this.canInit = true;
 					// this.findList()
 				}, 500);
 			},
@@ -1242,14 +1141,9 @@
 			projectMonitor(index, projectindex) {
 				let _this = this;
 				_this.canChange = true;
-				// _this.projectList[index].ext[projectindex].hasChange = true;
-
-				// _this.projectList[_this.nowDetailId].ext[projectindex].hasChange = true;
-				// _this.projectDetailsList[projectindex].hasChange = true;
 			},
 			slideChange(projectindex) {
 				let _this = this;
-
 				_this.projectList.forEach((listItem) => {
 					let value = 0,
 						num = 0;
@@ -1266,10 +1160,6 @@
 					listItem.mainValue = parseInt(value / num)
 				})
 				_this.canChange = true;
-				// // _this.projectDetailsList[projectindex].hasChange = true;
-
-
-				// _this.mainValue = 
 			},
 			showPopup(index, id) {
 				this.nowprojectIndex = index
@@ -1305,8 +1195,6 @@
 				this.plotList = [];
 			},
 			deletePerson(id, pid, deleteIndex) {
-				// this.projectDetailsList =
-				// return;
 				this.$confirm('此操作将永久删除该成员, 是否继续?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
@@ -1314,7 +1202,6 @@
 				}).then(() => {
 					var params = new URLSearchParams();
 					params.append("id", id);
-					// this.loading = true;
 					var loading = this.openLoading();
 					this.$axios({
 						url: '/getdelzx',
@@ -1326,10 +1213,7 @@
 					}).then((res) => {
 						if (res.data.errcode == 0) {
 							setTimeout(() => {
-								// this.loading = false;
-
 								loading.close();
-
 								setTimeout(() => {
 									this.$toast({
 										message: '删除成功!',
@@ -1347,22 +1231,17 @@
 											this.canChange = canChange;
 										}
 									})
-									// this.findList();
-									// this.findDetails(pid);
 								}, 500)
 
 							}, 500)
 						} else {
 							setTimeout(() => {
-								// this.loading = false;
 								loading.close();
 								setTimeout(() => {
 									this.$toast({
 										message: '删除失败！',
 										duration: 1000
 									});
-									// this.findList();
-									// this.findDetails(pid);
 								}, 500)
 
 							}, 500)
@@ -1370,7 +1249,6 @@
 					}).catch(() => {
 						setTimeout(() => {
 							setTimeout(() => {
-								// _this.loading = true;
 								loading.close();
 								_this.$toast({
 									message: "" + res.data.msg + "!",
@@ -1390,7 +1268,6 @@
 					var params = new URLSearchParams();
 					params.append("id", id);
 					let _this = this;
-					// _this.loading = true;
 					const loading = this.openLoading();
 					_this.$axios({
 						url: '/getRoofcan',
@@ -1403,7 +1280,6 @@
 						if (res.data.errcode == 0) {
 							setTimeout(() => {
 								setTimeout(() => {
-									// _this.loading = false;
 									loading.close();
 									_this.$toast({
 										message: "取消成功!",
@@ -1418,14 +1294,11 @@
 										}
 									})
 									this.projectList.push(zdObj);
-									// _this.findList()
-									// _this.findDetails(id);
 								}, 500)
 							}, 500)
 						} else {
 							setTimeout(() => {
 								setTimeout(() => {
-									// _this.loading = true;
 									loading.close();
 									_this.$toast({
 										message: "" + res.data.msg + "!",
@@ -1436,7 +1309,6 @@
 						}
 					}).catch(() => {
 						setTimeout(() => {
-							// this.loading = false;
 							loading.close();
 							setTimeout(() => {
 								this.$toast({
@@ -1446,9 +1318,7 @@
 							}, 500)
 						}, 500)
 					})
-				}).catch(() => {
-
-				})
+				}).catch(() => {})
 			},
 			overHead(index, id) {
 				this.$confirm('确定置顶?', '提示', {
@@ -1459,7 +1329,6 @@
 					var params = new URLSearchParams();
 					params.append("id", id);
 					let _this = this;
-					// _this.loading = true;
 					const loading = this.openLoading();
 					_this.$axios({
 						url: '/getRoof',
@@ -1472,7 +1341,6 @@
 						if (res.data.errcode == 0) {
 							setTimeout(() => {
 								setTimeout(() => {
-									// _this.loading = false;
 									loading.close();
 									_this.$toast({
 										message: "置顶成功!",
@@ -1487,8 +1355,6 @@
 										}
 									})
 									this.projectList.unshift(zdObj);
-									// _this.findList()
-									// _this.findDetails(id);
 								}, 500)
 							}, 500)
 						} else {
@@ -1500,13 +1366,11 @@
 										message: "" + res.data.msg + "!",
 										duration: 1000
 									});
-									_this.findList()
 								}, 500)
 							}, 500)
 						}
 					}).catch(() => {
 						setTimeout(() => {
-							// this.loading = false;
 							loading.close();
 							setTimeout(() => {
 								this.$toast({
@@ -1516,10 +1380,7 @@
 							}, 500)
 						}, 500)
 					})
-				}).catch(() => {
-
-				});
-
+				}).catch(() => {});
 			},
 			listenChange() {},
 			addPerson() {
@@ -1550,7 +1411,6 @@
 				params.append("zx_name", data.name);
 				params.append("design", data.post);
 				let _this = this;
-				// _this.loading = true;
 				const loading = this.openLoading();
 				_this.$axios({
 					url: '/getProadd',
@@ -1606,7 +1466,6 @@
 				var Hours = date.getHours();
 				var Minutes = date.getMinutes();
 				var Seconds = date.getSeconds();
-
 				if (month >= 1 && month <= 9) {
 					month = "0" + month;
 				}
@@ -1686,9 +1545,7 @@
 						}
 					})
 					_this.update(data, id)
-				}).catch(() => {
-
-				});
+				}).catch(() => {});
 			},
 			addFind(id) {
 				let _this = this;
@@ -1708,8 +1565,6 @@
 							let speed = 0;
 							let num = 0;
 							_this.projectDetailsList = res.data.data
-							// this.oldDetailsList = res.data.data
-
 							let dataArr = []
 							let projectListNow = _this.projectList[_this.nowprojectIndex];
 							let data = {};
@@ -1736,16 +1591,13 @@
 							newData.id = project.id;
 							newData.xm_id = project.xm_id;
 							newData.user_id = user_id;
-							// return;
 							this.addUpdate(newData, dataArr, this.nowDetailId)
 						}
 					} else {
 						this.projectDetailsList = [];
 						this.mainValue = 0
 					}
-				}).catch(() => {
-
-				})
+				}).catch(() => {})
 			},
 			addUpdate(newData, data, id) {
 				let _this = this;
@@ -1786,7 +1638,6 @@
 										} else {
 											dataItem.canChange = false
 										}
-
 										//添加是否可改
 										let canChange = listItem.ext.some((dataItem) => {
 											return u_id == dataItem.user_id
@@ -1808,13 +1659,11 @@
 												item.speed = parseInt(item.speed)
 											}
 										})
-
 										if (speed == 0 || num == 0) {
 											listItem.mainValue = 0
 										} else {
 											listItem.mainValue = parseInt(speed / num)
 										}
-
 									})
 									listItem.ext.forEach((item) => {
 										if (item.design == '产品') {
@@ -1823,7 +1672,6 @@
 											item.isCh = false
 										}
 									})
-									
 									//判断是否为产品、测试
 									listItem.ext.forEach((item) => {
 										if (item.design == '产品' || item.design == '测试') {
@@ -1834,7 +1682,6 @@
 									})
 								}
 							})
-
 							//打卡
 							let allData = this.projectList; //总数据
 							let date = this.daysList; // 每阶段天数
@@ -1871,7 +1718,6 @@
 											})
 										})
 										for (var i = 0; i < extItem.daysList.length; i++) {
-											console.log(extItem.daysList[i].name, this.nowDays)
 											if (extItem.daysList[i].hasCard) {
 												if (extItem.daysList[i].name == this.nowDays) {
 													extItem.hasCard = true;
@@ -1882,7 +1728,6 @@
 									}
 								})
 							})
-							// console.log(res.data.data, '??')
 							this.projectList = allData
 							// 打卡
 							// this.findList();
@@ -1904,7 +1749,6 @@
 			},
 			update(data, id) {
 				let _this = this;
-				// _this.loading = true;
 				const loading = this.openLoading();
 				_this.$axios({
 					url: '/getSpeed2',
@@ -1916,20 +1760,16 @@
 				}).then((res) => {
 					if (res.data.errcode == 0) {
 						setTimeout(() => {
-							// _this.loading = false;
 							loading.close();
 							setTimeout(() => {
 								_this.$toast({
 									message: '更新成功!',
 									duration: 1000
 								});
-								// this.findList();
-								// this.findDetails(id)
 							}, 500)
 						}, 500)
 					} else {
 						setTimeout(() => {
-							// _this.loading = false;
 							loading.close();
 							setTimeout(() => {
 								_this.$toast({
@@ -1941,7 +1781,6 @@
 					}
 				}).catch(() => {
 					setTimeout(() => {
-						// _this.loading = false;
 						loading.close();
 						setTimeout(() => {
 							_this.$toast({
@@ -1953,11 +1792,9 @@
 				})
 			},
 			showProject(index, e, pIndex, checked, type) {
-				// e.preventDefault()
 				this.isType = type
 				this.nowDetailId = index
 				let id = index
-				// this.findDetails(id)
 				this.projectList.forEach((item, index) => {
 					item.checked = false;
 					if (item.id == id) {
@@ -1966,10 +1803,8 @@
 				})
 			},
 			toLogin() {
-				localStorage.removeItem('role')
-				this.$router.replace({
-					path: '/login'
-				})
+				localStorage.removeItem('role');
+				this.$router.replace({ path: '/login' });
 			},
 			findList() {
 				let _this = this;
@@ -2016,8 +1851,6 @@
 								item.overTime = false
 							}
 						})
-
-
 						//详情数据开始
 						let isType = this.isType
 						let personType = this.personType
@@ -2034,7 +1867,6 @@
 									item.isCh = false
 								}
 							})
-
 							//判断是否为产品、测试
 							listItem.ext.forEach((item) => {
 								if (item.design == '产品' || item.design == '测试') {
@@ -2043,7 +1875,6 @@
 									item.isCS = false
 								}
 							})
-
 							listItem.ext.forEach((dataItem) => {
 								let id = 0
 								personList.forEach((item) => {
@@ -2057,7 +1888,6 @@
 								} else {
 									dataItem.canChange = false
 								}
-
 								//添加是否可改
 								let canChange = listItem.ext.some((dataItem) => {
 									return u_id == dataItem.user_id
@@ -2079,33 +1909,66 @@
 										item.speed = parseInt(item.speed)
 									}
 								})
-
 								if (speed == 0 || num == 0) {
 									listItem.mainValue = 0
 								} else {
 									listItem.mainValue = parseInt(speed / num)
 								}
-
 							})
 						})
 						//详情数据结尾
-						if (this.page == 0) {
-							this.projectList = res.data.data
-						} else {
-							res.data.data.forEach((item) => {
-								this.projectList.push(item)
+						this.projectList = res.data.data;
+						//打卡
+						let allData = this.projectList; //总数据
+						let date = this.daysList; // 每阶段天数
+						allData.forEach((allItem, allIndex) => {
+							allItem.ext && allItem.ext.forEach((extItem, extIndex) => {
+								//初始化每一项daysList（必须有值）
+								extItem.daysList = date.map((daysItem, daysIndex) => {
+									return {
+										name: daysItem.name,
+										hasCard: false,
+									}
+								})
+								extItem.hasCard = false;
+								if(this.log_id == extItem.log_id){									
+									extItem.tex && extItem.tex.forEach((texItem, textIndex) => {
+										let punchtime = texItem.punchtime.split('-');
+										let temp = punchtime[punchtime.length - 1];
+										let result = extItem.daysList.findIndex((dateItem, dateIndex) => {
+											if (extItem.daysList[i].name == this.nowDays) {
+												if (dateItem.name == temp) {
+													//匹配到了
+													dateItem.hasCard = true
+													return true;
+												} else {
+													//未匹配到
+													dateItem.hasCard = false;
+													return false;
+												}
+											}else {
+												//未匹配到
+												dateItem.hasCard = false;
+												return false;
+											}
+										})
+									})
+									for (var i = 0; i < extItem.daysList.length; i++) {
+										if (extItem.daysList[i].hasCard) {
+											if (extItem.daysList[i].name == this.nowDays) {
+												extItem.hasCard = true;
+												break;
+											}
+										}
+									}
+								}
 							})
-							if (res.data.data.length < 8) {
-								this.isLoading = false;
-							}
-						}
-
-
-						// _this.projectList = res.data.data
+						})
+						this.projectList = allData
+						// 打卡	
+						this.isLoading = false;
 					}
-				}).catch(() => {
-
-				})
+				}).catch(() => {})
 			},
 			findListOne() {
 				let data = {
@@ -2152,8 +2015,6 @@
 									}
 								})
 							})
-
-
 							//详情数据开始
 							let isType = this.isType
 							let personType = this.personType
@@ -2217,7 +2078,6 @@
 									} else {
 										listItem.mainValue = parseInt(speed / num)
 									}
-
 								})
 							})
 							//详情数据结尾
@@ -2248,7 +2108,6 @@
 									})
 									for (var i = 0; i < extItem.daysList.length; i++) {
 										if(extItem.daysList[i].hasCard){
-											console.log(extItem.daysList[i].name,this.nowDays)
 											if (extItem.daysList[i].name == this.nowDays) {
 												extItem.hasCard = true;
 											}else {
@@ -2277,9 +2136,7 @@
 						this.finished = true;
 						this.canInit = false;
 					}
-				}).catch((reason) => {
-					console.warn('1111', reason)
-				})
+				}).catch((reason) => {})
 			},
 			findDetails(id) {
 				this.projectDetailsList = [];
@@ -2306,7 +2163,6 @@
 									item.isCh = false
 								}
 							})
-
 							res.data.data.forEach((item) => {
 								if (item.design == '产品' || item.design == '测试') {
 									item.isCS = true
@@ -2358,15 +2214,9 @@
 									item.detail.speed = parseInt(item.detail.speed)
 								}
 							})
-
 							this.projectDetailsList = res.data.data
 							this.oldDetailsList = res.data.data
 							this.address = res.data.data ? res.data.data[0].xm_url : '';
-							// if (speed == 0 || num == 0) {
-							// 	this.mainValue = 0
-							// } else {
-							// 	this.mainValue = parseInt(speed / num)
-							// }
 						}
 					} else {
 						this.projectDetailsList = [];
@@ -2427,12 +2277,8 @@
 
 		created() {
 			let _this = this;
-
 			var nowDay = new Date().getDate();
-			// var nowDay = '18'
-			let daysIndex = new Date().getDate() % 10 == 0 ? parseInt(new Date().getDate() / 10) : parseInt(new Date().getDate() /
-				10) + 1;
-			// let daysIndex = 3;
+			let daysIndex = new Date().getDate() % 10 == 0 ? parseInt(new Date().getDate() / 10) : parseInt(new Date().getDate() / 10) + 1;
 			let days = _this.getDays();
 			let daysList = [];
 			for (var i = 1; i <= days; i++) {
@@ -2458,13 +2304,10 @@
 			}
 			_this.nowDays = nowDay;
 			_this.daysList = daysList;
-			// let dayList = dayLength
 			let role = localStorage.getItem('role')
-			// _this.loading = true;
 			const loading = this.openLoading();
 			_this.findPerson();
 			loading.close();
-			// _this.loading = false;
 			let id = localStorage.getItem('id', )
 			let uid = _this.uncompileStr(id).split('&&')[1]
 			_this.uid = uid

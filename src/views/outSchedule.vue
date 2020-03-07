@@ -16,8 +16,6 @@
 				</el-date-picker>
 				<el-button class='btn_table' type='primary' @click="createTable" plain>生成表格</el-button>
 				<el-button class='btn_table' type='primary'  v-if="port" id="excell" @click="method5('dataTable')" plain>导出Excle表格</el-button>
-<!-- 				<div class="drawTable" @click="createTable">生成表格</div>
-				<div class='drawTable btn btn-outer' v-if="port" id="excell" @click="method5('dataTable')">导出Excle表格</div> -->
 			</div>
 			<table class="table2excel" id="dataTable">
 				<thead>
@@ -45,7 +43,7 @@
 					<tr v-for="(newItem,newIndex) in newList" :key="newIndex">
 						<td style="min-width:300px; text-align: center;" v-html="newIndex+1"></td>
 						<td style="text-align: center;" v-html="newItem.pro_name"></td>
-						<td style="text-align: center;" v-html="newItem.creat_time"></td>
+						<td style="text-align: center;" v-html="newItem.pro[0].creat_time"></td>
 						<td :style="[{'text-align': 'center','color': '#fff','background':colorSelect(newItem.price)}]" v-html="nameSelect(newItem.price)"></td>
 						<td style="text-align: center;" v-html="newItem.sale_name"></td>
 						<td style="text-align: center;" v-html="newItem.zx_cp"></td>
@@ -938,8 +936,9 @@
 
 	#scheduling .block {
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
+		width: 100%;
 	}
 
 	#scheduling label {

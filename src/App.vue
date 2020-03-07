@@ -117,4 +117,10 @@
 	.small-rate .rate-container .rate .el-progress__text {
 		transform: translate(0,-50%)  scale(0.8) !important;
 	}
+	.el-date-picker .el-picker-panel__body {
+		margin-left: 0 !important
+	}
+	.finishi-time .el-form-item__content {
+		margin-left:0 !important;
+	}
 </style>

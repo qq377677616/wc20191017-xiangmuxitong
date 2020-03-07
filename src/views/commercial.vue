@@ -93,7 +93,7 @@
 								<div class="schedule" @click.stop="toSchedule(projectItem.id)">查看排期</div>
 							</div>
 							<div class='operate' v-if="projectItem.user_id == uid">
-								<div class="schedule" @click.stop="deleteProject(projectItem.id,projectItem.user_id,projectDetailsIndex)">删除项目（谨慎删除）</div>
+								<div class="schedule" @click.stop="deleteProject(projectItem.id,projectItem.user_id,projectIndex)">删除项目（谨慎删除）</div>
 							</div>
 						</div>
 						<div :class="{'type-wrapper':true,'showframe':projectItem.checked}" v-show="projectItem.checked">
@@ -110,9 +110,9 @@
 											</div>
 											<div class="info" v-show="!projectDetailsItem.isCS">
 												<span v-html="projectDetailsItem.centen_log"></span>
-											</div>	
+											</div>
 										</div>
-										
+
 									</div>
 									<div class="rate-container" v-if="projectDetailsList !=''">
 										<div class="rate" v-if="projectDetailsList !=''">
@@ -170,11 +170,21 @@
 					</div>
 				</div>
 				<div>
+					<div class='pro_deliver'>完结时间:</div>
+					<el-form-item class="finishi-time">
+						<el-col :span="24">
+							<el-date-picker type="date" :editable="false" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="finishTime"
+							 style="width: 100%;"></el-date-picker>
+						</el-col>
+					</el-form-item>
+				</div>
+				<div>
 					<div class='pro_deliver'>项目总评:</div>
 					<el-input @click.native="inputClick($event)" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="详细描述问题..."
 					 v-model="projectFinish.info_details" @blur="scrollChange">
 					</el-input>
 				</div>
+
 				<el-form-item class='primary_box'>
 					<el-button type="primary" @click.native="scoreSubmit">提交</el-button>
 				</el-form-item>
@@ -218,8 +228,8 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" @click.native="AddFrom">确定添加</el-button>
+				<el-form-item class="btn-item">
+					<el-button type="primary" class="" @click.native="AddFrom">确定添加</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
@@ -435,7 +445,8 @@
 						text: '活动商品',
 						value: 2
 					}
-				]
+				],
+				finishTime: ''
 			}
 		},
 		components: {
@@ -499,22 +510,23 @@
 			}, 1500)
 		},
 		methods: {
-			deleteProject(id, user_id,deleteIndex){
+			deleteProject(id, user_id, deleteIndex) {
 				let _this = this;
-				console.log(user_id,this.uid)
+				console.log(user_id, this.uid)
 				let pass = user_id == this.uid
-				if(!pass){
+				if (!pass) {
 					this.$toast({
-						message : '您不是当前项目的商务',
-						duration : 1000
+						message: '您不是当前项目的商务',
+						duration: 1000
 					})
 					return;
 				}
-				this.$confirm('此操作将永久删除该成员, 是否继续?', '提示', {
+				this.$confirm('此操作将删除该项目, 是否继续?', '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
-				}).then(() => {
+				}).then((res) => {
+					console.log(res)
 					var params = new URLSearchParams();
 					params.append("id", id);
 					// this.loading = true;
@@ -545,7 +557,7 @@
 									})
 									this.projectList = projectList
 								}, 500)
-				
+
 							}, 500)
 						} else {
 							setTimeout(() => {
@@ -746,7 +758,7 @@
 										}
 									})
 								})
-								
+
 								res.data.data.forEach((item) => {
 									let sjList = [],
 										qdList = [],
@@ -785,7 +797,7 @@
 											sj += sjList[i]
 										}
 									}
-								
+
 									if (qdList.length == 0) {
 										qd = 0
 									} else {
@@ -793,7 +805,7 @@
 											qd += qdList[i]
 										}
 									}
-								
+
 									if (hdList.length == 0) {
 										hd = 0
 									} else {
@@ -801,19 +813,19 @@
 											hd += hdList[i]
 										}
 									}
-								
+
 									if (sj == 0) {
 										item.sjScore = 0
 									} else {
 										item.sjScore = parseInt(sj / sjList.length)
 									}
-								
+
 									if (qd == 0) {
 										item.qdScore = 0
 									} else {
 										item.qdScore = parseInt(qd / qdList.length)
 									}
-								
+
 									if (hd == 0) {
 										item.hdScore = 0
 									} else {
@@ -906,7 +918,7 @@
 										}
 									})
 								})
-								
+
 								res.data.data.forEach((item) => {
 									let sjList = [],
 										qdList = [],
@@ -945,7 +957,7 @@
 											sj += sjList[i]
 										}
 									}
-								
+
 									if (qdList.length == 0) {
 										qd = 0
 									} else {
@@ -953,7 +965,7 @@
 											qd += qdList[i]
 										}
 									}
-								
+
 									if (hdList.length == 0) {
 										hd = 0
 									} else {
@@ -961,26 +973,26 @@
 											hd += hdList[i]
 										}
 									}
-								
+
 									if (sj == 0) {
 										item.sjScore = 0
 									} else {
 										item.sjScore = parseInt(sj / sjList.length)
 									}
-								
+
 									if (qd == 0) {
 										item.qdScore = 0
 									} else {
 										item.qdScore = parseInt(qd / qdList.length)
 									}
-								
+
 									if (hd == 0) {
 										item.hdScore = 0
 									} else {
 										item.hdScore = parseInt(hd / hdList.length)
 									}
 								})
-								
+
 								res.data.data.forEach((item) => {
 									res.data.data.forEach((item) => {
 										let time = _this.DateMinus(_this.DayChange(new Date()), item.shangx_time)
@@ -1084,12 +1096,11 @@
 				this.projectId = id
 				this.projectFinish.info_details = '';
 				this.finishModalShow = true;
+				this.finishTime = '';
 			},
-
 			scoreSubmit() {
 				let _this = this;
 				let data = [];
-				console.log(_this.projectDetailsList)
 				let ifPass = false;
 				_this.projectDetailsList.forEach((item) => {
 					let obj = {}
@@ -1098,12 +1109,30 @@
 					obj.zx_post = item.design;
 					obj.zx_name = item.zx_name;
 					obj.m_center = _this.projectFinish.info_details;
-					obj.creat_time = _this.Change(new Date());
+					// obj.creat_time = _this.Change(new Date());
+					obj.creat_time = _this.finishTime;
 					obj.sorce = 10;
 					obj.Job_share = item.score_value * 5 + '%' ? item.score_value * 5 + '%' : 0 + '%';
 					obj.customer = item.kh_value;
+					if (!item.kh_value) {
+						_this.$toast({
+							message: '评价不能为空!'
+						})
+					}
 					data.push(obj)
 				})
+				if (!_this.finishTime.split(' ')[0]) {
+					_this.$toast({
+						message: '完结时间不能为空!'
+					});
+					return;
+				}
+				if (!_this.projectFinish.info_details) {
+					_this.$toast({
+						message: '总评不能为空!'
+					});
+					return;
+				}
 				const loading = this.openLoading();
 				_this.$axios({
 					url: '/getScore',
@@ -1114,18 +1143,16 @@
 					data: qs.stringify(data),
 				}).then((res) => {
 					if (res.data.errcode == 0) {
-						setTimeout(() => {
-							// this.loading = false
-							loading.close();
-							_this.finishModalShow = false;
-							setTimeout(() => {
-								_this.$toast({
-									message: '评分成功！',
-									duration: 1000
-								})
-								_this.findList();
-							}, 500)
-						}, 500)
+				setTimeout(() => {
+					// this.loading = false
+					loading.close();
+					_this.finishModalShow = false;
+					setTimeout(() => {
+						_this.$toast({ message: '评分成功！' });
+						// _this.findList();
+						_this.projectList.splice(_this.nowprojectIndex, 1);
+					}, 500)
+				}, 500)
 					} else {
 						setTimeout(() => {
 							// this.loading = false
@@ -1356,8 +1383,6 @@
 								})
 							})
 							this.colorList = colorList
-
-
 							res.data.data.forEach((item) => {
 								let sjList = [],
 									qdList = [],
@@ -1447,9 +1472,6 @@
 									}
 								})
 							})
-
-
-							console.log(res.data.data, '??')
 
 							if (this.page == 0) {
 								this.projectList = res.data.data
@@ -1821,7 +1843,7 @@
 		display: flex;
 		justify-content: space-between;
 		position: relative;
-		z-index:1000;
+		z-index: 1000;
 	}
 
 	.type {
@@ -1900,6 +1922,7 @@
 		padding: 10px 25px 25px;
 		background-color: #f5f5f5;
 		box-sizing: border-box;
+		z-index: 1000;
 	}
 
 	.add-submit {
@@ -2147,19 +2170,26 @@
 	.finish_modal .el-dialog__body {
 		padding: 0 5px 0;
 	}
+
+	.btn-item {
+		text-align: center;
+		width: 100%;
+		justify-content: center;
+	}
+
 	// .data_center {
 	// 	margin: 10px 0;
 	// 	display: flex;
 	// 	justify-content: space-between;
 	// 	align-items: center;
 	// }
-	
+
 	// table tr td {
 	// 	padding: 6px;
 	// 	border: 1px solid #eee;
 	// 	position: relative;
 	// }
-	
+
 	// .data_select {
 	// 	position: absolute;
 	// 	left: 50%;
@@ -2167,7 +2197,7 @@
 	// 	transform: translateX(-50%);
 	// 	color: #fff;
 	// }
-	
+
 	// .data_active {
 	// 	background: rgba(64, 158, 225, 0.5);
 	// }

@@ -80,7 +80,6 @@ white-space: nowrap;">
 									<el-button type="primary" plain style="padding:5px 10px" @click.native="showCase(dataItem.id,dataIndex)">修改</el-button>
 									<el-button type="danger" plain style="padding:5px 10px" @click.native="deleteTable(dataItem.id)">删除</el-button>
 								</td>
-
 							</tr>
 						</table>
 					</td>
