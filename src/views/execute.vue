@@ -32,7 +32,8 @@
 				</div>
 			</div>
 			<div class="statistics">
-				<div class="output" @click="toSearch()">项目消化情况</div>
+				<el-button type='primary' plain class="output" @click.native="toSearch()">项目消化情况</el-button>
+				<!-- <div class="output" @click="toSearch()">项目消化情况</div> -->
 				<div class="statistics_right">
 					<div class='price_num'>项目价格统计:</div>
 					<div class="statistics_box" v-for="(statistItem, statistIndex) in colorList" :key="statistIndex">
@@ -42,7 +43,8 @@
 				</div>
 			</div>
 			<div class="statistics">
-				<div class="output" @click="toFx()">添加项目分析</div>
+				<el-button type='primary' plain class="output" @click.native="toFx()">案例大全</el-button>
+				<!-- <div class="output" @click="toFx()">添加项目分析</div> -->
 			</div>
 			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
 				<van-list v-model="loadingcontent" :finished="finished" @load="onLoad">
@@ -2807,12 +2809,10 @@
 	}
 
 	.output {
-		padding: 5px 10px;
-		background: #409EFF;
-		border-radius: 5px;
-		color: #fff;
+		padding: 10px 10px;
+		color: #409EFF;
 		cursor: pointer;
-		// font-size: 12px;
+		font-size: 12px;
 	}
 
 	.price_num {

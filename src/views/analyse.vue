@@ -185,7 +185,8 @@
 					files: ''
 				},
 				dataList: [],
-				link_type: 1
+				link_type: 1,
+				bm_type : ''
 			};
 		},
 		components: {
@@ -321,8 +322,10 @@
 			},
 			addAnalyse() {
 				let _this = this;
-
-				if(_this.uid != 85) {
+				let pass = false;
+				let type = _this.bm_type;
+				pass = _this.uid == 85 || type == 3 || type == 4 || type == 8 || type == 9;
+				if(!pass) {
 					_this.$toast({
 						message : '您没有权限！',
 						duration : 1000
@@ -534,6 +537,7 @@
 			let id = localStorage.getItem('id')
 			let uid = this.uncompileStr(id).split('&&')[1]
 			this.uid = uid;
+			this.bm_type = localStorage.getItem('type');
 			// this.uid = 85;
 			this.findCenter()
 		}
@@ -876,8 +880,11 @@
 	.table2excel tr td {
 		width: 12.5% !important;
 	}
-	.btn_copy {
-		
-	}	
+	.output {
+		padding: 10px 10px;
+		color: initial;
+		cursor: pointer;
+		font-size: 12px;
+	}
 
 </style>
